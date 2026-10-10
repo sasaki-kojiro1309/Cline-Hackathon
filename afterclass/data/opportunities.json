@@ -1,0 +1,406 @@
+[
+  {
+    "id": "opp-01",
+    "title": "Logic Circuit Mini Challenge",
+    "category": "competition",
+    "description": "An example exploration activity. Try designing three logic circuits and compare your solutions.",
+    "relevant_interests": [
+      "digital systems",
+      "electronics",
+      "problem solving"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 3.0,
+    "estimated_effort_label": "3 hours",
+    "next_action": "Try designing three logic circuits and compare your solutions.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-02",
+    "title": "Beginner Coding Challenge",
+    "category": "competition",
+    "description": "An example exploration activity. Solve a small set of beginner coding problems.",
+    "relevant_interests": [
+      "programming",
+      "problem solving"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Solve a small set of beginner coding problems.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-03",
+    "title": "Data Puzzle Challenge",
+    "category": "competition",
+    "description": "An example exploration activity. Explore a small dataset and answer three questions.",
+    "relevant_interests": [
+      "data science",
+      "mathematics",
+      "problem solving"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Explore a small dataset and answer three questions.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-04",
+    "title": "Design Concept Challenge",
+    "category": "competition",
+    "description": "An example exploration activity. Sketch and explain a solution to a common student problem.",
+    "relevant_interests": [
+      "design",
+      "product design",
+      "creative arts"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 3.0,
+    "estimated_effort_label": "3 hours",
+    "next_action": "Sketch and explain a solution to a common student problem.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-05",
+    "title": "Campus Hackathon Exploration",
+    "category": "campus_event",
+    "description": "An example exploration activity. Look for an official upcoming campus hackathon and review its rules.",
+    "relevant_interests": [
+      "programming",
+      "entrepreneurship",
+      "collaboration"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 4.0,
+    "estimated_effort_label": "4 hours",
+    "next_action": "Look for an official upcoming campus hackathon and review its rules.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-06",
+    "title": "Electronics Lab Demonstration",
+    "category": "campus_event",
+    "description": "An example exploration activity. Ask your department about an upcoming electronics demonstration.",
+    "relevant_interests": [
+      "electronics",
+      "hardware",
+      "physics"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Ask your department about an upcoming electronics demonstration.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-07",
+    "title": "Student Research Talk",
+    "category": "campus_event",
+    "description": "An example exploration activity. Check your department's official notice board for a research talk.",
+    "relevant_interests": [
+      "research",
+      "science",
+      "physics"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Check your department's official notice board for a research talk.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-08",
+    "title": "Public Speaking Practice Session",
+    "category": "campus_event",
+    "description": "An example exploration activity. Check whether a student group hosts speaking practice.",
+    "relevant_interests": [
+      "public speaking",
+      "collaboration"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Check whether a student group hosts speaking practice.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-09",
+    "title": "Tiny Processor Model",
+    "category": "project",
+    "description": "An example exploration activity. Draw a simple processor block diagram and explain each part.",
+    "relevant_interests": [
+      "computer architecture",
+      "digital systems",
+      "hardware"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 5.0,
+    "estimated_effort_label": "5 hours",
+    "next_action": "Draw a simple processor block diagram and explain each part.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-10",
+    "title": "Personal Webpage Prototype",
+    "category": "project",
+    "description": "An example exploration activity. Build a one-page mockup with a heading and two sections.",
+    "relevant_interests": [
+      "web development",
+      "programming",
+      "design"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 4.0,
+    "estimated_effort_label": "4 hours",
+    "next_action": "Build a one-page mockup with a heading and two sections.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-11",
+    "title": "Simple Robotics Concept",
+    "category": "project",
+    "description": "An example exploration activity. Sketch a robot concept and list the parts it would need.",
+    "relevant_interests": [
+      "robotics",
+      "electronics",
+      "hardware"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 5.0,
+    "estimated_effort_label": "5 hours",
+    "next_action": "Sketch a robot concept and list the parts it would need.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-12",
+    "title": "Student Problem Design Sprint",
+    "category": "project",
+    "description": "An example exploration activity. Pick one student problem and storyboard a simple solution.",
+    "relevant_interests": [
+      "product design",
+      "design",
+      "collaboration"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 3.0,
+    "estimated_effort_label": "3 hours",
+    "next_action": "Pick one student problem and storyboard a simple solution.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-13",
+    "title": "Research Question Workshop",
+    "category": "research",
+    "description": "An example exploration activity. Write one testable question and identify what evidence it needs.",
+    "relevant_interests": [
+      "research",
+      "science",
+      "problem solving"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Write one testable question and identify what evidence it needs.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-14",
+    "title": "Campus Sustainability Inquiry",
+    "category": "research",
+    "description": "An example exploration activity. Observe a sustainability challenge on campus and outline a study.",
+    "relevant_interests": [
+      "environment",
+      "research",
+      "community service"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 3.0,
+    "estimated_effort_label": "3 hours",
+    "next_action": "Observe a sustainability challenge on campus and outline a study.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-15",
+    "title": "Beginner AI Experiment Plan",
+    "category": "research",
+    "description": "An example exploration activity. Describe a small AI question and how to evaluate it safely.",
+    "relevant_interests": [
+      "artificial intelligence",
+      "data science",
+      "research"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 3.0,
+    "estimated_effort_label": "3 hours",
+    "next_action": "Describe a small AI question and how to evaluate it safely.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-16",
+    "title": "Basic Biology Observation Plan",
+    "category": "research",
+    "description": "An example exploration activity. Plan a harmless observation and write down the question.",
+    "relevant_interests": [
+      "biology",
+      "research",
+      "science"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Plan a harmless observation and write down the question.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-17",
+    "title": "Intro to Digital Logic Path",
+    "category": "learning_resource",
+    "description": "An example exploration activity. Study truth tables and build a simple logic example.",
+    "relevant_interests": [
+      "digital systems",
+      "computer architecture",
+      "electronics"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Study truth tables and build a simple logic example.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-18",
+    "title": "Beginner Programming Practice",
+    "category": "learning_resource",
+    "description": "An example exploration activity. Complete a beginner exercise using a language you already have.",
+    "relevant_interests": [
+      "programming",
+      "web development"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Complete a beginner exercise using a language you already have.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-19",
+    "title": "Data Visualization Basics",
+    "category": "learning_resource",
+    "description": "An example exploration activity. Create a chart from a small sample dataset.",
+    "relevant_interests": [
+      "data science",
+      "design",
+      "mathematics"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Create a chart from a small sample dataset.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-20",
+    "title": "Cybersecurity Fundamentals Reading",
+    "category": "learning_resource",
+    "description": "An example exploration activity. Read an introductory explanation of passwords and common threats.",
+    "relevant_interests": [
+      "cybersecurity",
+      "programming"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 2.0,
+    "estimated_effort_label": "2 hours",
+    "next_action": "Read an introductory explanation of passwords and common threats.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-21",
+    "title": "Join a Student Coding Group",
+    "category": "student_community",
+    "description": "An example exploration activity. Check your campus club directory for a coding group.",
+    "relevant_interests": [
+      "programming",
+      "collaboration",
+      "web development"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Check your campus club directory for a coding group.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-22",
+    "title": "Find a Student Maker Community",
+    "category": "student_community",
+    "description": "An example exploration activity. Ask whether a campus maker group meets nearby.",
+    "relevant_interests": [
+      "robotics",
+      "electronics",
+      "hardware"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Ask whether a campus maker group meets nearby.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-23",
+    "title": "Student Writing Circle",
+    "category": "student_community",
+    "description": "An example exploration activity. Look for a campus writing or critique circle.",
+    "relevant_interests": [
+      "writing",
+      "creative arts",
+      "collaboration"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Look for a campus writing or critique circle.",
+    "url": null,
+    "is_example": true
+  },
+  {
+    "id": "opp-24",
+    "title": "Student Service Group Exploration",
+    "category": "student_community",
+    "description": "An example exploration activity. Find an official campus volunteering or service group.",
+    "relevant_interests": [
+      "community service",
+      "environment",
+      "collaboration"
+    ],
+    "required_skills": [],
+    "estimated_effort_hours": 1.0,
+    "estimated_effort_label": "1 hour",
+    "next_action": "Find an official campus volunteering or service group.",
+    "url": null,
+    "is_example": true
+  }
+]
