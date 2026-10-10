@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import { journeyDataSchema } from "./journey";
 
 export const analysisSchema = z.object({
   enjoyed: z.array(z.string()),
@@ -58,6 +59,7 @@ export const discoveriesSchema = z.object({
   evidence: z.array(z.object({ reflectionId: z.string(), text: z.string(), createdAt: z.string() })),
   themeChanges: z.array(z.object({ tag: z.string(), recentCount: z.number(), previousCount: z.number(), description: z.string(), sourceReflectionIds: z.array(z.string()) })).default([]),
   historyCount: z.number().default(0),
+  journey: journeyDataSchema.optional(),
 });
 export type Discoveries = z.infer<typeof discoveriesSchema>;
 export const recommendationCardSchema = z.object({
@@ -67,9 +69,15 @@ export const recommendationCardSchema = z.object({
   status: feedbackStatusSchema.nullable(),
   verifiedAt: z.string().nullable().default(null), source: z.string().nullable().default(null),
   prerequisiteNote: z.string().nullable().default(null),
+  sourceKind: z.literal("example").default("example"),
 });
 export type RecommendationCard = z.infer<typeof recommendationCardSchema>;
 export const recommendationsSchema = z.object({
   hasReflections: z.boolean(), recommendations: z.array(recommendationCardSchema), saved: z.array(recommendationCardSchema),
+  latestCheckIn: z.string().nullable().default(null),
 });
 export type Recommendations = z.infer<typeof recommendationsSchema>;
+export const catalogueResponseSchema = z.object({
+  activities: z.array(recommendationCardSchema), subjects: z.array(z.string()),
+  total: z.number(), catalogueTotal: z.number(), page: z.number(), pageSize: z.number(),
+});

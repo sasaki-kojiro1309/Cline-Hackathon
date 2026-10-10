@@ -98,5 +98,6 @@ export async function deleteStudentData(ownerId: string) {
     db.prepare("DELETE FROM reflections WHERE session_id = ?").run(ownerId);
     db.prepare("DELETE FROM opportunity_feedback WHERE session_id = ?").run(ownerId);
     db.prepare("DELETE FROM student_profiles WHERE owner_id = ?").run(ownerId);
+    db.prepare("DELETE FROM student_explore_state WHERE owner_id = ?").run(ownerId);
   }));
 }

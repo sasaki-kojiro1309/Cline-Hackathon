@@ -1,6 +1,7 @@
 import "server-only";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import { z } from "zod/v4";
 import { analysisSchema } from "./schemas";
 import { canonicalTags, sanitizeAnalysis } from "./analysis";
 import { ApiError } from "./api";
@@ -20,33 +21,39 @@ Return time_budget_hours only if the student explicitly states time available fo
 Keep arrays under 6 entries, signals under 80 characters, insight under 350 characters and directions under 120 characters.`;
 
 export async function analyzeReflection(text: string) {
+  const user = `Untrusted student reflection (JSON string):\n${JSON.stringify(text)}`;
+  const output = await analyzeStructured(systemPrompt, user, analysisSchema);
+  try { return sanitizeAnalysis(output, text); }
+  catch { throw new ApiError(502, "AI_INVALID_RESPONSE", "The AI response could not be validated. Please retry; no reflection was saved."); }
+}
+
+export async function analyzeStructured<T>(system: string, user: string, schema: z.ZodType<T>) {
   const config = getAIConfig();
   const { apiKey, model } = config;
   const label = providerLabels[config.provider];
-  const user = `Untrusted student reflection (JSON string):\n${JSON.stringify(text)}`;
-  const format = zodTextFormat(analysisSchema, "afterclass_reflection_analysis");
+  const format = zodTextFormat(schema, "afterclass_reflection_analysis");
   try {
     if (config.provider !== "openai") {
       let output: unknown;
       for (let attempt = 0; ; attempt++) {
-        try { output = await requestProvider(config, systemPrompt, user, format.schema); break; }
+        try { output = await requestProvider(config, system, user, format.schema); break; }
         catch (error) {
           const transient = error instanceof ProviderError && (error.code === "connection" || error.code === "timeout" || (error.status ?? 0) >= 500);
           if (!transient || attempt >= 1) throw error;
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
       }
-      return sanitizeAnalysis(output, text);
+      return schema.parse(output);
     }
     const client = new OpenAI({ apiKey, timeout: 25000, maxRetries: 1 });
     const response = await client.responses.parse({
       model, store: false,
-      input: [{ role: "system", content: systemPrompt }, { role: "user", content: user }],
+      input: [{ role: "system", content: system }, { role: "user", content: user }],
       text: { format },
       max_output_tokens: 1600,
     });
     if (!response.output_parsed) throw new ApiError(502, "AI_INVALID_RESPONSE", "The AI did not return usable insights. Your reflection was not saved; please retry.");
-    return sanitizeAnalysis(response.output_parsed, text);
+    return schema.parse(response.output_parsed);
   } catch (error) {
     if (error instanceof ApiError) throw error;
     if (error instanceof OpenAI.APIError || error instanceof ProviderError) {

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod/v4";
 import { analysisSchema, reflectionInputSchema } from "@/lib/schemas";
 import { ensureSession, errorMessage, requestJson } from "@/lib/client-api";
+import { notifyDataChanged } from "@/lib/data-events";
 
 const responseSchema = z.object({ reflection: z.object({ id: z.string(), text: z.string(), createdAt: z.string() }), analysis: analysisSchema });
 export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
@@ -22,7 +23,9 @@ export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
     try {
       await ensureSession();
       await requestJson("/api/reflections", responseSchema, { ...result.data, consent });
+      notifyDataChanged();
       router.push("/discoveries");
+      router.refresh();
     } catch (error) { setError(errorMessage(error)); }
     finally { setBusy(false); }
   }

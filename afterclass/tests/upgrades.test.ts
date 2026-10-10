@@ -35,15 +35,15 @@ describe("privacy, consent, longitudinal discoveries and cost protection", () =>
     expect(consentInputSchema.safeParse({ text: reflection().text, consent: false }).success).toBe(false);
     expect(consentInputSchema.safeParse({ text: reflection().text, consent: true }).success).toBe(true);
   });
-  it("compares equal reflection windows with real evidence, not ability scores", () => {
+  it("compares equal calendar periods with real evidence, not ability scores", () => {
     const rows = ["writing", "writing", "digital systems", "digital systems"].map((tag, i) => reflection([tag], {
-      id: `550e8400-e29b-41d4-a716-44665544000${i + 1}`, createdAt: `2026-10-${14 - i}T08:00:00.000Z`,
+      id: `550e8400-e29b-41d4-a716-44665544000${i + 1}`, createdAt: `2026-10-${[14, 13, 7, 6][i].toString().padStart(2, "0")}T08:00:00.000Z`,
     }));
-    const themes = buildDiscoveries(rows).themeChanges;
-    expect(themes).toHaveLength(1); expect(themes[0]).toMatchObject({ tag: "writing", recentCount: 2, previousCount: 0 });
+    const themes = buildDiscoveries(rows, { range: "all" }, new Date("2026-10-14T00:00:00Z")).themeChanges;
+    expect(themes).toHaveLength(2); expect(themes[0]).toMatchObject({ tag: "writing", recentCount: 2, previousCount: 0 });
     expect(themes[0].sourceReflectionIds).toEqual([rows[0].id, rows[1].id]);
     expect(themes[0].description).toContain("not ability");
-    expect(buildDiscoveries(rows.slice(0, 3)).themeChanges).toEqual([]);
+    expect(buildDiscoveries(rows.slice(0, 2), { range: "all" }, new Date("2026-10-14T00:00:00Z")).themeChanges).toEqual([]);
   });
   it("maps specific curiosity phrases conservatively without arbitrary skill guesses", () => {
     expect(curiosityTags("how a processor works")).toEqual(["computer architecture"]);

@@ -4,22 +4,25 @@ import { buildRecommendations } from "../../lib/recommendations";
 import { getCatalogue } from "../../lib/catalogue";
 import { feedbackInputSchema, type FeedbackRecord, type ReflectionRecord } from "../../lib/schemas";
 import { feedback, reflection } from "../fixtures";
+import { historyPage, readRange } from "../../lib/journey";
 
 async function mockApi(page: Page, fail = false) {
   const records: ReflectionRecord[] = [], rows: FeedbackRecord[] = [];
   await page.route("**/api/**", async (route) => {
-    const path = new URL(route.request().url()).pathname;
+    const url = new URL(route.request().url()), path = url.pathname;
     const json = (value: unknown, status = 200) => route.fulfill({ status, json: value });
     if (path === "/api/account") return json({ authenticated: true, loginId: "test_student", storage: "local", profile: { displayName: "", consentAt: null }, retentionDays: 0 });
     if (path === "/api/session") return json({ ready: true });
     if (path === "/api/reflections") {
+      if (route.request().method() === "GET") return json(historyPage(records, url.searchParams));
       if (fail) return json({ error: { message: "Insights are temporarily unavailable." } }, 503);
       const input: { text: string } = route.request().postDataJSON();
-      const record = reflection(["digital systems", "computer architecture"], { text: input.text }); records.push(record);
+      const record = reflection(["digital systems", "computer architecture"], { id: crypto.randomUUID(), text: input.text, createdAt: new Date().toISOString() }); records.push(record);
       return json({ reflection: { id: record.id, text: record.text, createdAt: record.createdAt }, analysis: record.analysis }, 201);
     }
-    if (path === "/api/discoveries") return json(buildDiscoveries(records));
-    if (path === "/api/recommendations") return json(buildRecommendations(records, rows, getCatalogue()));
+    if (path === "/api/discoveries") return json(buildDiscoveries(records, readRange(url.searchParams)));
+    if (path === "/api/journey") return json({ status: "none", summary: null, generatedAt: null, providerLabel: "OpenAI", reflectionCount: records.length, evidenceCount: 0, cached: false });
+    if (path === "/api/recommendations") return json(buildRecommendations(records, rows, getCatalogue(), true));
     if (path === "/api/feedback") {
       const input = feedbackInputSchema.parse(route.request().postDataJSON());
       const index = rows.findIndex((r) => r.opportunityId === input.opportunityId);
@@ -41,13 +44,17 @@ test("mocked AI APIs: authenticated reflection/evidence/save/dismiss/complete jo
   await expect(page.getByText(reflection().text, { exact: true }).first()).toBeVisible();
   await page.getByRole("navigation").getByRole("link", { name: "Your Next Steps" }).click();
   await expect(page.getByRole("article")).toHaveCount(3);
-  await page.getByRole("article", { name: "Nand to Tetris: Explore Boolean Logic", exact: true }).getByRole("button", { name: "Not interested" }).click();
-  await expect(page.getByRole("article", { name: "Nand to Tetris: Explore Boolean Logic", exact: true })).toHaveCount(0);
-  await page.getByRole("article", { name: "Tiny Processor Model", exact: true }).getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("article", { name: "Boolean Logic Practice Plan", exact: true }).getByRole("button", { name: "Save", exact: true }).click();
   const saved = page.getByRole("region", { name: "Saved", exact: true });
   await expect(saved.getByRole("article")).toHaveCount(1); await page.reload();
   await saved.getByRole("button", { name: "Mark completed" }).click();
   await expect(saved.getByRole("article")).toHaveCount(0);
+  await page.getByRole("navigation").getByRole("link", { name: "Daily Check-in" }).click();
+  await page.getByLabel("Your reflection").fill("I enjoyed another digital systems lab today."); await page.getByRole("checkbox", { name: /I consent/ }).check();
+  await page.getByRole("button", { name: "Find my insights" }).click();
+  await expect(page.getByText("Based on 2 reflections", { exact: false })).toBeVisible();
+  await page.getByRole("tab", { name: "History" }).click();
+  await expect(page.getByText("2 matching reflections", { exact: false })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(errors).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath("next-steps.png"), fullPage: true });

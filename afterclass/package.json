@@ -13,7 +13,6 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check:config": "node scripts/check-config.mjs",
-    "check:resources": "node scripts/verify-resources.mjs",
     "test:live": "node scripts/live-smoke.mjs"
   },
   "dependencies": {

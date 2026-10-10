@@ -1,12 +1,15 @@
-import { endpoint, jsonBody } from "@/lib/api";
+import { endpoint, jsonBody, ApiError } from "@/lib/api";
+import { historyPage } from "@/lib/journey";
 import { analyzeReflection } from "@/lib/ai";
 import { insertReflection, listReflections, getProfile, saveProfile } from "@/lib/storage";
 import { consentInputSchema } from "@/lib/schemas";
 import { enforceLimit } from "@/lib/rate-limit";
 export const runtime = "nodejs";
-export const GET = endpoint(async (_request, sessionId) => ({
-  reflections: (await listReflections(sessionId)).map(({ id, text, createdAt }) => ({ id, text, createdAt })),
-}));
+export const GET = endpoint(async (request, sessionId) => {
+  const rows = await listReflections(sessionId, true);
+  try { return historyPage(rows, request.nextUrl.searchParams); }
+  catch { throw new ApiError(400, "INVALID_QUERY", "Choose valid history search, page and dates."); }
+});
 export const POST = endpoint(async (request, sessionId) => {
   const { text } = await jsonBody(request, consentInputSchema);
   await enforceLimit(`ai:${sessionId}`, 10, 3600);

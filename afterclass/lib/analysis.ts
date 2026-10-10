@@ -1,11 +1,8 @@
 import { analysisSchema, type Analysis } from "./schemas";
+import { normalizeTag } from "./tags";
+export { normalizeTag } from "./tags";
 
-export const canonicalTags = ["computer architecture", "digital systems", "electronics", "robotics", "programming", "web development", "data science", "artificial intelligence", "cybersecurity", "mathematics", "problem solving", "research", "physics", "biology", "environment", "design", "product design", "writing", "public speaking", "entrepreneurship", "community service", "creative arts", "hardware", "collaboration"];
-export function normalizeTag(value: string): string {
-  const tag = value.trim().toLowerCase().replace(/\s+/g, " ");
-  const synonyms: Record<string, string> = { coding: "programming", circuits: "digital systems", "web design": "web development", "logic circuits": "digital systems", "logic gates": "digital systems", "computer organisation": "computer architecture", "computer organization": "computer architecture", "machine learning": "artificial intelligence", "data analysis": "data science", "creative writing": "writing", "volunteering": "community service" };
-  return synonyms[tag] ?? tag;
-}
+export const canonicalTags = ["computer architecture", "digital systems", "electronics", "robotics", "programming", "web development", "data science", "artificial intelligence", "cybersecurity", "mathematics", "problem solving", "research", "physics", "biology", "environment", "design", "product design", "writing", "public speaking", "entrepreneurship", "community service", "creative arts", "hardware", "collaboration", "geography", "history", "chemistry", "geology", "economics", "philosophy", "astronomy", "music", "literature", "languages", "psychology", "sociology", "civics", "law", "finance", "accounting", "business", "marketing", "agriculture", "health", "nutrition", "sports", "mechanical engineering", "civil engineering", "architecture", "education", "photography", "film", "dance"];
 export function curiosityTags(value: string): string[] {
   const normalized = normalizeTag(value);
   if (canonicalTags.includes(normalized)) return [normalized];

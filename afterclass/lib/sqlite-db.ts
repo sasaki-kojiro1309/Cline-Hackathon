@@ -52,6 +52,9 @@ function initialize(db: DatabaseSync) {
       expires_at INTEGER NOT NULL, created_at INTEGER NOT NULL
     ) STRICT;
     CREATE INDEX IF NOT EXISTS login_sessions_account_idx ON login_sessions(account_id);
+    CREATE TABLE IF NOT EXISTS student_explore_state (
+      owner_id TEXT PRIMARY KEY, state TEXT NOT NULL CHECK(json_valid(state))
+    ) STRICT;
   `);
   transaction(db, () => {
     const version = db.prepare("SELECT value FROM metadata WHERE key = 'schema_version'").get();

@@ -21,7 +21,7 @@ describe("real SQLite database", () => {
     withDatabase((db) => {
       expect(db.prepare("PRAGMA journal_mode").get()?.journal_mode).toBe("wal");
       expect(db.prepare("SELECT value FROM metadata WHERE key='schema_version'").get()?.value).toBe("2");
-      expect(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()).toHaveLength(7);
+      expect(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()).toHaveLength(8);
     });
   });
   it("uses bound parameters for student text including SQL-looking input", async () => {

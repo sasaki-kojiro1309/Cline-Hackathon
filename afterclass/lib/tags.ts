@@ -1,0 +1,6 @@
+export function normalizeTag(value: string): string {
+  const tag = value.trim().toLowerCase().replace(/\s+/g, " ");
+  const synonyms: Record<string, string> = { coding: "programming", circuits: "digital systems", "web design": "web development", "logic circuits": "digital systems", "logic gates": "digital systems", "computer organisation": "computer architecture", "computer organization": "computer architecture", "machine learning": "artificial intelligence", "data analysis": "data science", "creative writing": "writing", "volunteering": "community service" };
+  const subjectAliases: Record<string, string> = { maths: "mathematics", math: "mathematics", "physical education": "sports", "political science": "civics", "earth science": "geology", ecology: "environment", "environmental science": "environment", "english literature": "literature", "foreign languages": "languages", "computer science": "programming", "business studies": "business", "visual arts": "creative arts" };
+  return synonyms[tag] ?? subjectAliases[tag] ?? tag;
+}

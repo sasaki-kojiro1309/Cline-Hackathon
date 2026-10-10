@@ -3,7 +3,7 @@
     "id": "opp-01",
     "title": "Logic Circuit Mini Challenge",
     "category": "competition",
-    "description": "An example exploration activity. Try designing three logic circuits and compare your solutions.",
+    "description": "Put your logic skills to work by designing three circuits and comparing your solutions.",
     "relevant_interests": [
       "digital systems",
       "electronics",
@@ -20,7 +20,7 @@
     "id": "opp-02",
     "title": "Beginner Coding Challenge",
     "category": "competition",
-    "description": "An example exploration activity. Solve a small set of beginner coding problems.",
+    "description": "Build programming confidence with a small set of beginner coding problems.",
     "relevant_interests": [
       "programming",
       "problem solving"
@@ -36,7 +36,7 @@
     "id": "opp-03",
     "title": "Data Puzzle Challenge",
     "category": "competition",
-    "description": "An example exploration activity. Explore a small dataset and answer three questions.",
+    "description": "Discover patterns in a small dataset and use them to answer three questions.",
     "relevant_interests": [
       "data science",
       "mathematics",
@@ -53,7 +53,7 @@
     "id": "opp-04",
     "title": "Design Concept Challenge",
     "category": "competition",
-    "description": "An example exploration activity. Sketch and explain a solution to a common student problem.",
+    "description": "Turn a common student problem into a design concept you can sketch and explain.",
     "relevant_interests": [
       "design",
       "product design",
@@ -70,7 +70,7 @@
     "id": "opp-05",
     "title": "Campus Hackathon Exploration",
     "category": "campus_event",
-    "description": "An example exploration activity. Look for an official upcoming campus hackathon and review its rules.",
+    "description": "Explore whether a campus hackathon could be a good fit by checking official listings and rules.",
     "relevant_interests": [
       "programming",
       "entrepreneurship",
@@ -87,7 +87,7 @@
     "id": "opp-06",
     "title": "Electronics Lab Demonstration",
     "category": "campus_event",
-    "description": "An example exploration activity. Ask your department about an upcoming electronics demonstration.",
+    "description": "Find out how electronics work in practice by asking your department about demonstrations.",
     "relevant_interests": [
       "electronics",
       "hardware",
@@ -104,7 +104,7 @@
     "id": "opp-07",
     "title": "Student Research Talk",
     "category": "campus_event",
-    "description": "An example exploration activity. Check your department's official notice board for a research talk.",
+    "description": "Explore student research by checking your department's talk listings and preparing a question.",
     "relevant_interests": [
       "research",
       "science",
@@ -121,7 +121,7 @@
     "id": "opp-08",
     "title": "Public Speaking Practice Session",
     "category": "campus_event",
-    "description": "An example exploration activity. Check whether a student group hosts speaking practice.",
+    "description": "Build your speaking confidence by looking for student groups that offer practice sessions.",
     "relevant_interests": [
       "public speaking",
       "collaboration"
@@ -137,7 +137,7 @@
     "id": "opp-09",
     "title": "Tiny Processor Model",
     "category": "project",
-    "description": "An example exploration activity. Draw a simple processor block diagram and explain each part.",
+    "description": "Explore computer architecture by drawing a simple processor diagram and explaining each part.",
     "relevant_interests": [
       "computer architecture",
       "digital systems",
@@ -154,7 +154,7 @@
     "id": "opp-10",
     "title": "Personal Webpage Prototype",
     "category": "project",
-    "description": "An example exploration activity. Build a one-page mockup with a heading and two sections.",
+    "description": "Bring a web page idea to life with a heading and two simple sections.",
     "relevant_interests": [
       "web development",
       "programming",
@@ -171,7 +171,7 @@
     "id": "opp-11",
     "title": "Simple Robotics Concept",
     "category": "project",
-    "description": "An example exploration activity. Sketch a robot concept and list the parts it would need.",
+    "description": "Turn a robotics idea into a concept sketch and identify the parts it would need.",
     "relevant_interests": [
       "robotics",
       "electronics",
@@ -188,7 +188,7 @@
     "id": "opp-12",
     "title": "Student Problem Design Sprint",
     "category": "project",
-    "description": "An example exploration activity. Pick one student problem and storyboard a simple solution.",
+    "description": "Design a useful solution to a student problem through a simple storyboard.",
     "relevant_interests": [
       "product design",
       "design",
@@ -205,7 +205,7 @@
     "id": "opp-13",
     "title": "Research Question Workshop",
     "category": "research",
-    "description": "An example exploration activity. Write one testable question and identify what evidence it needs.",
+    "description": "Turn your curiosity into a testable question and identify the evidence you need.",
     "relevant_interests": [
       "research",
       "science",
@@ -222,7 +222,7 @@
     "id": "opp-14",
     "title": "Campus Sustainability Inquiry",
     "category": "research",
-    "description": "An example exploration activity. Observe a sustainability challenge on campus and outline a study.",
+    "description": "Investigate a campus sustainability challenge by outlining a small study.",
     "relevant_interests": [
       "environment",
       "research",
@@ -239,7 +239,7 @@
     "id": "opp-15",
     "title": "Beginner AI Experiment Plan",
     "category": "research",
-    "description": "An example exploration activity. Describe a small AI question and how to evaluate it safely.",
+    "description": "Explore an AI question and plan a safe way to evaluate it.",
     "relevant_interests": [
       "artificial intelligence",
       "data science",
@@ -256,7 +256,7 @@
     "id": "opp-16",
     "title": "Basic Biology Observation Plan",
     "category": "research",
-    "description": "An example exploration activity. Plan a harmless observation and write down the question.",
+    "description": "Practise scientific inquiry by planning a harmless observation around a clear question.",
     "relevant_interests": [
       "biology",
       "research",
@@ -273,7 +273,7 @@
     "id": "opp-17",
     "title": "Intro to Digital Logic Path",
     "category": "learning_resource",
-    "description": "An example exploration activity. Study truth tables and build a simple logic example.",
+    "description": "Strengthen your digital logic foundations with truth tables and a simple gate exercise.",
     "relevant_interests": [
       "digital systems",
       "computer architecture",
@@ -290,7 +290,7 @@
     "id": "opp-18",
     "title": "Beginner Programming Practice",
     "category": "learning_resource",
-    "description": "An example exploration activity. Complete a beginner exercise using a language you already have.",
+    "description": "Practise programming with a beginner exercise in a language you already use.",
     "relevant_interests": [
       "programming",
       "web development"
@@ -306,7 +306,7 @@
     "id": "opp-19",
     "title": "Data Visualization Basics",
     "category": "learning_resource",
-    "description": "An example exploration activity. Create a chart from a small sample dataset.",
+    "description": "Make data easier to understand by creating a chart from a small practice dataset.",
     "relevant_interests": [
       "data science",
       "design",
@@ -323,7 +323,7 @@
     "id": "opp-20",
     "title": "Cybersecurity Fundamentals Reading",
     "category": "learning_resource",
-    "description": "An example exploration activity. Read an introductory explanation of passwords and common threats.",
+    "description": "Learn the foundations of digital safety through passwords and common security threats.",
     "relevant_interests": [
       "cybersecurity",
       "programming"
@@ -339,7 +339,7 @@
     "id": "opp-21",
     "title": "Join a Student Coding Group",
     "category": "student_community",
-    "description": "An example exploration activity. Check your campus club directory for a coding group.",
+    "description": "Find peers to learn with by checking your campus club directory for a coding group.",
     "relevant_interests": [
       "programming",
       "collaboration",
@@ -356,7 +356,7 @@
     "id": "opp-22",
     "title": "Find a Student Maker Community",
     "category": "student_community",
-    "description": "An example exploration activity. Ask whether a campus maker group meets nearby.",
+    "description": "Explore hands-on making with others by asking about campus maker groups.",
     "relevant_interests": [
       "robotics",
       "electronics",
@@ -373,7 +373,7 @@
     "id": "opp-23",
     "title": "Student Writing Circle",
     "category": "student_community",
-    "description": "An example exploration activity. Look for a campus writing or critique circle.",
+    "description": "Grow as a writer by looking for a campus writing or critique circle.",
     "relevant_interests": [
       "writing",
       "creative arts",
@@ -390,7 +390,7 @@
     "id": "opp-24",
     "title": "Student Service Group Exploration",
     "category": "student_community",
-    "description": "An example exploration activity. Find an official campus volunteering or service group.",
+    "description": "Explore ways to contribute by finding an official campus volunteering or service group.",
     "relevant_interests": [
       "community service",
       "environment",

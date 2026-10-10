@@ -8,11 +8,11 @@ import { signSession, verifySession } from "@/lib/session-signing";
 import { emptyAnalysis, feedback, reflection } from "./fixtures";
 
 describe("catalogue", () => {
-  it("contains 24 examples and 4 verified resources with unique IDs", () => {
+  it("contains 100 labelled examples with unique IDs and no external links", () => {
     const items = getCatalogue();
-    expect(items).toHaveLength(28); expect(new Set(items.map((o) => o.id)).size).toBe(28);
-    expect(items.filter((o) => o.is_example)).toHaveLength(24);
-    items.forEach((o) => { expect(opportunitySchema.safeParse(o).success).toBe(true); if (o.is_example) expect(o.url).toBeNull(); else { expect(o.verified_at).toBeTruthy(); expect(o.source).toBeTruthy(); expect(o.url).toMatch(/^https:/); } });
+    expect(items).toHaveLength(100); expect(new Set(items.map((o) => o.id)).size).toBe(100);
+    expect(items.every((o) => o.is_example && o.url === null)).toBe(true);
+    items.forEach((o) => expect(opportunitySchema.safeParse(o).success).toBe(true));
   });
   it("does not find invented IDs", () => expect(getOpportunityById("not-real")).toBeUndefined());
 });
@@ -50,13 +50,13 @@ describe("discoveries", () => {
   });
   it("recurring patterns reference actual evidence IDs", () => {
     const second = reflection(["digital systems"], { id: "550e8400-e29b-41d4-a716-446655440002", createdAt: "2026-10-11T08:00:00.000Z" });
-    const result = buildDiscoveries([reflection(["digital systems"]), second]);
+    const result = buildDiscoveries([reflection(["digital systems"]), second], { range: "all" }, new Date("2026-10-14T00:00:00Z"));
     expect(result.interests[0].count).toBe(2); expect(result.observations[0].kind).toBe("recurring");
     expect(result.observations[0].sourceReflectionIds).toEqual([second.id, reflection().id]);
   });
   it("does not invent recurrence between unrelated reflections; latest insight wins", () => {
     const second = reflection(["writing"], { id: "550e8400-e29b-41d4-a716-446655440002", createdAt: "2026-10-11T08:00:00.000Z", analysis: { ...emptyAnalysis, interests: ["writing"], short_insight: "You may enjoy writing." } });
-    const result = buildDiscoveries([reflection(["digital systems"]), second]);
+    const result = buildDiscoveries([reflection(["digital systems"]), second], { range: "all" }, new Date("2026-10-14T00:00:00Z"));
     expect(result.observations.every((o) => o.kind === "early")).toBe(true); expect(result.interests[0].tag).toBe("writing");
     expect(result.shortInsight).toBe(second.analysis.short_insight); expect(result.evidence[0].text).toBe(second.text);
   });

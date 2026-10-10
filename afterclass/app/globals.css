@@ -59,6 +59,24 @@ input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--green); 
 .account-panel > summary { font-size: 1rem; }
 .login-panel { max-width: 700px; margin-inline: auto; }
 .verified { color: #1b553c; background: #eaf1e7; display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: .73rem; margin-block: 8px; width: fit-content; }
+select { display: block; width: min(100%, 440px); border: 1px solid #a7b8aa; border-radius: 10px; padding: 12px 14px; background: white; color: var(--ink); font: inherit; margin-bottom: 16px; }
+.range-fields { display: flex; flex-wrap: wrap; gap: 16px; }
+.range-fields > div { flex: 1 1 180px; min-width: 0; }
+.page-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.discovery-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-bottom: 20px; }
+.discovery-toolbar label { font-size: .85rem; }
+.discovery-toolbar input, .discovery-toolbar select { margin: 0; min-height: 44px; }
+.discovery-tabs { display: flex; gap: 6px; padding: 6px; background: #eaf0e6; border-radius: 12px; margin-bottom: 20px; width: fit-content; }
+.discovery-tabs button { background: transparent; color: var(--muted); border-color: transparent; }
+.discovery-tabs button[aria-selected="true"], .discovery-tabs button[aria-pressed="true"] { background: white; color: var(--green); box-shadow: 0 2px 8px rgb(36 53 46 / 8%); }
+.discovery-context { margin-bottom: 16px; }
+.interest-grid, .pattern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.interest-card { background: #f3f6ef; padding: 18px; border-radius: 12px; min-width: 0; }
+.interest-card h3 { margin-top: 0; text-transform: capitalize; }
+.signal-row + .signal-row { border-top: 1px solid #dfe6dd; margin-top: 16px; }
+.optional-summary > .panel { border: none; box-shadow: none; padding: 20px 0 0; margin: 0; }
+.discovery-next { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-block: 24px; }
+@media (max-width: 600px) { .interest-grid, .pattern-grid { grid-template-columns: 1fr; } .page-heading, .discovery-next { flex-direction: column; } .discovery-tabs { width: 100%; } .discovery-tabs button { flex: 1; padding-inline: 10px; } }
 button.danger { background: #913d30; border-color: #913d30; }
 .panel { box-shadow: 0 4px 20px rgb(36 53 46 / 3%); }
 .opportunity { transition: border-color .15s; }

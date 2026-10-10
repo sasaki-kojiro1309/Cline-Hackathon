@@ -58,7 +58,7 @@ export function AccountPanel() {
         </form>
       </> : <p>Please log in again.</p>}
       <hr className="my-6" /><h2>Your data, your choice</h2>
-      <p className="small">AI processing requires consent on every submission. Export or delete your reflections, analyses, feedback and display name below. Deleting data keeps your Login ID and password account so you can continue using AfterClass. Provider copies and backups are not deleted.</p>
+      <p className="small">AI reflection processing requires consent. Next Steps uses a local catalogue of exploration ideas, without web search. Export or delete your reflections, analyses, feedback and display name below. Any stored results from the retired web-search feature are also included in exports and deletion. Deleting data keeps your Login ID and password account. Provider copies and backups are not deleted.</p>
       <button className="secondary" disabled={busy} onClick={() => void exportData()}>Export my data</button>
       <form className="mt-5" onSubmit={(event) => { event.preventDefault(); void deleteData(); }}>
         <label htmlFor="delete-confirmation">Type DELETE to permanently remove my AfterClass data</label>

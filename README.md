@@ -10,5 +10,6 @@ provider, model, and base URL configuration.
 
 The prototype uses local SQLite storage and required Login ID/password accounts—no anonymous option.
 It includes
-longitudinal discoveries, verified learning resources and privacy controls.
+longitudinal discoveries, 100 labelled example activities across many subjects,
+catalogue browsing and privacy controls. Live web-data features are disabled.
 Cloud setup and hosting: `afterclass/DEPLOYMENT.md` (no deployment yet).

@@ -122,11 +122,11 @@ describe("real local persistence and API (AI mocked only)", () => {
     expect((await recommendations(a)).recommendations.map((r: { id: string }) => r.id)).toEqual(["opp-17", "resource-03", "opp-09"]);
     await feedbackPost(request("feedback", a, { opportunityId: "opp-01", status: "not_interested" }));
     expect((await recommendations(a)).recommendations.every((r: { id: string }) => r.id !== "opp-01")).toBe(true);
-    await feedbackPost(request("feedback", a, { opportunityId: "opp-09", status: "saved" }));
-    expect((await recommendations(a)).saved.map((r: { id: string }) => r.id)).toEqual(["opp-09"]);
+    await feedbackPost(request("feedback", a, { opportunityId: "resource-03", status: "saved" }));
+    expect((await recommendations(a)).saved.map((r: { id: string }) => r.id)).toEqual(["resource-03"]);
     expect((await recommendations(b)).saved).toEqual([]);
-    await feedbackPost(request("feedback", a, { opportunityId: "opp-09", status: "completed" }));
+    await feedbackPost(request("feedback", a, { opportunityId: "resource-03", status: "completed" }));
     expect((await recommendations(a)).saved).toEqual([]);
-    expect((await recommendations(a)).recommendations.every((r: { id: string }) => !["opp-01", "opp-09"].includes(r.id))).toBe(true);
+    expect((await recommendations(a)).recommendations.every((r: { id: string }) => !["opp-01", "resource-03"].includes(r.id))).toBe(true);
   });
 });
