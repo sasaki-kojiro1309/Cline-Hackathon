@@ -1,5 +1,9 @@
 # AfterClass — your long-term learning companion
 
+For the problem statement, solution overview, architecture, judge walkthrough,
+and how Cline was used, start with the [repository README](../README.md).
+This document is the detailed setup and implementation reference.
+
 AfterClass connects short reflections to tentative interests, evidence-backed
 discoveries and catalogue-based next steps. **Every student must create an
 account or log in using a Login ID and password. There is no anonymous/guest
@@ -7,16 +11,19 @@ option.** After login, the three main screens remain Daily Check-in, My
 Discoveries and Your Next Steps; the login/create-account interface gates all
 three screens without introducing another product page.
 
-## Run on macOS
+## Run locally (macOS/Linux and Windows)
 
 Requires Node.js **24+** (SQLite is built into Node):
 
 ```bash
-cd /Users/mac_m5/Documents/GitHub/Cline-Hackathon/afterclass
-export PATH="/Users/mac_m5/.nvm/versions/node/v24.21.0/bin:$PATH"
-npm install
-# First setup only: cp .env.example .env.local
-# Do not overwrite an existing .env.local.
+git clone https://github.com/sasaki-kojiro1309/Cline-Hackathon.git
+cd Cline-Hackathon/afterclass
+node --version
+npm ci
+# First setup only; keep an existing .env.local:
+cp -n .env.example .env.local
+# Edit .env.local with your AI provider, key, and model before continuing.
+npm run check:config
 npm run dev
 ```
 
@@ -25,9 +32,18 @@ set `STORAGE_PROVIDER=local`. Set **`DATA_RETENTION_DAYS=0`** to keep history un
 the student deletes it. This is the new default when the variable is absent, but
 an existing explicit value such as 365 still applies until you change it.
 
-Windows: use `npm.cmd install` / `npm.cmd run dev` in the app directory.
-For first-time setup use `Copy-Item .env.example .env.local`. No Supabase, email,
-SMTP or external database is required. Restart after configuration changes.
+If the repository is already checked out, start in its `afterclass` directory
+instead of cloning again. On Windows PowerShell, replace the copy command with
+`if (-not (Test-Path .env.local)) { Copy-Item .env.example .env.local }`.
+Use `npm.cmd ci` / `npm.cmd run dev` if PowerShell blocks npm's script wrapper.
+No Supabase, email, SMTP or external database is required. Restart after
+configuration changes. The config check tests presence only, not live AI access.
+
+Without AI credentials, account creation and **Next Steps → Browse ideas** still
+work. New reflections require successful AI analysis before they are saved;
+missing keys produce an error, not simulated insights. Follow the
+[judge walkthrough](../README.md#suggested-judge-walkthrough--about-five-minutes)
+for the complete demo and the separate multi-day summary requirements.
 
 ### Development page keeps reloading
 
@@ -307,9 +323,7 @@ Successful AI journeys mock network responses; local account browser tests use
 the real SQLite database with AI keys disabled. No paid AI calls or live cloud
 checks were made during this update.
 
-Example-catalogue update validation: typecheck **PASS**, lint **PASS**,
-**163 unit/API tests PASS**, **14 desktop/mobile browser tests PASS**, and
-production build **PASS**. The multi-day tests additionally cover all-history
+The multi-day tests additionally cover all-history
 aggregation beyond 200 rows, UTC dates/weeks, same-day deduplication, mixed
 experiences, search/pagination, citations, cache expiry/configuration/isolation,
 retention/deletion, concurrent data changes and summary cost limits. Browser
@@ -318,6 +332,9 @@ history search/pagination and AI failure without losing local discoveries.
 New checks cover canonical-subject coverage, aliases, catalogue browsing,
 save/completed/dismissed states, no external calls for catalogue/recommendations,
 and export/deletion of retired web-search data.
+Page-stability tests check that idle pages retain typed input and catalogue
+filters without repeated document reloads or API reads. Playwright uses port 3100,
+an isolated temporary SQLite directory, and a separate `.next-e2e` build cache.
 
 `npm run test:live` explicitly requires `ALLOW_LIVE_SMOKE=true` and spends AI
 credits. It creates an isolated test account, checks the journey and removes its
