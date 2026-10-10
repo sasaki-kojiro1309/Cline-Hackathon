@@ -8,7 +8,7 @@ AfterClass is a student reflection and exploration app built with Cline. Its cor
 
 This repository contains a working local prototype. Follow the setup below to run it; there is no hosted demo documented here.
 
-**Jump to:** [Judge setup](#run-it-locally--judge-setup) · [Demo walkthrough](#suggested-judge-walkthrough--about-five-minutes) · [Architecture](#architecture) · [Tech stack](#tech-stack) · [Cline's role](#how-cline-was-used-in-the-build)
+**Jump to:** [Setup](#run-it-locally) · [Demo walkthrough](#suggested-judge-walkthrough--about-five-minutes) · [Architecture](#architecture) · [Tech stack](#tech-stack) · [Cline's role](#how-cline-was-used-in-the-build)
 
 ## The problem
 
@@ -37,7 +37,7 @@ Each activity includes a practical next action, **Approximate time**, and **Why 
 - **Honest activity data:** ideas are starting points to adapt, not verified events, course listings, or external-resource recommendations. There is no live web search or automatic external updating.
 - **Student control:** accounts keep histories separate; AI requests require consent; students can export or delete their app data.
 
-## Run it locally — judge setup
+## Run it locally
 
 ### Prerequisites
 
