@@ -1,0 +1,38 @@
+[
+  {
+    "id": "resource-01", "title": "MDN: Getting Started with Web Development", "category": "learning_resource",
+    "description": "MDN provides beginner setup guides and structured HTML, CSS and JavaScript learning modules.",
+    "relevant_interests": ["web development", "programming", "design"], "required_skills": [],
+    "estimated_effort_hours": 1, "estimated_effort_label": "1-hour exploration (our estimate, not the full curriculum)",
+    "next_action": "Open MDN's Getting started modules and work through one beginner lesson.",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development", "is_example": false,
+    "verified_at": "2026-10-10", "source": "MDN Web Docs"
+  },
+  {
+    "id": "resource-02", "title": "CS50: Explore an Introduction to Computer Science", "category": "learning_resource",
+    "description": "Harvard's CS50 OpenCourseWare introduces programming, algorithms and problem solving, with or without prior programming experience.",
+    "relevant_interests": ["programming", "problem solving"], "required_skills": [],
+    "estimated_effort_hours": 2, "estimated_effort_label": "2-hour introduction (our estimate, not the full course)",
+    "next_action": "Visit the official CS50 site and explore the Week 0 Scratch material.",
+    "url": "https://cs50.harvard.edu/x/", "is_example": false,
+    "verified_at": "2026-10-10", "source": "Harvard CS50 OpenCourseWare"
+  },
+  {
+    "id": "resource-03", "title": "Nand to Tetris: Explore Boolean Logic", "category": "learning_resource",
+    "description": "The official Nand to Tetris project sequence begins with Boolean logic and progresses through hardware and software construction.",
+    "relevant_interests": ["digital systems", "computer architecture", "hardware"], "required_skills": [],
+    "estimated_effort_hours": 2, "estimated_effort_label": "2-hour exploration (our estimate, not full project completion)",
+    "next_action": "Read the official Project 1 Boolean Logic guidelines and explore one gate design.",
+    "url": "https://www.nand2tetris.org/course", "is_example": false,
+    "verified_at": "2026-10-10", "source": "Official Nand to Tetris project site"
+  },
+  {
+    "id": "resource-04", "title": "Purdue OWL: Explore the Writing Process", "category": "learning_resource",
+    "description": "Purdue OWL offers guidance on prewriting, research questions, outlines, thesis statements and proofreading.",
+    "relevant_interests": ["writing", "research"], "required_skills": [],
+    "estimated_effort_hours": 1, "estimated_effort_label": "1-hour practice session (our estimate)",
+    "next_action": "Choose one outlining or revision guide and apply it to a short piece of your own writing.",
+    "url": "https://owl.purdue.edu/owl/general_writing/the_writing_process/index.html", "is_example": false,
+    "verified_at": "2026-10-10", "source": "Purdue University Online Writing Lab"
+  }
+]

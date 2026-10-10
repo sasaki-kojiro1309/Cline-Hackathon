@@ -10,16 +10,18 @@ export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [consent, setConsent] = useState(false);
   const router = useRouter();
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
+    if (!consent) { setError("Please consent to AI processing before submitting."); return; }
     const result = reflectionInputSchema.safeParse({ text });
     if (!result.success) { setError(result.error.issues[0].message); return; }
     setBusy(true); setError("");
     try {
       await ensureSession();
-      await requestJson("/api/reflections", responseSchema, result.data);
+      await requestJson("/api/reflections", responseSchema, { ...result.data, consent });
       router.push("/discoveries");
     } catch (error) { setError(errorMessage(error)); }
     finally { setBusy(false); }
@@ -36,7 +38,8 @@ export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
       placeholder="A few honest sentences are enough. What stayed with you today?" />
     <p id="reflection-help" className="small count">{text.length} / 1,500 characters · Minimum 20</p>
     {error && <p id="reflection-error" className="error" role="alert">{error} Your text is still here; submit again to retry.</p>}
+    <label className="consent"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} disabled={busy} /> I consent to sending this reflection to {providerLabel} for AI analysis and storing it in AfterClass.</label>
     <button type="submit" disabled={busy}>{busy ? "Finding your insights…" : "Find my insights"}</button>
-    <p className="small mt-4">Your reflection is sent to {providerLabel} for analysis and stored locally in this prototype. Avoid sensitive personal information.</p>
+    <p className="small mt-4">AI observations can be mistaken. Avoid sensitive personal information. Review storage, retention, export and deletion options in Account & privacy below.</p>
   </form>;
 }

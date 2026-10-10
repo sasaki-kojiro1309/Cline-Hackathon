@@ -22,6 +22,12 @@ function request() { return fetchMock.mock.calls[0] as [string, RequestInit]; }
 function requestBody() { return JSON.parse(request()[1].body as string); }
 
 describe("multi-provider AI (network mocked)", () => {
+  it("retries a transient REST failure once then accepts a validated result", async () => {
+    fetchMock.mockImplementationOnce(async () => json({ error: {} }, 500));
+    fetchMock.mockImplementationOnce(async () => json(gemini()));
+    expect((await analyzeReflection(reflection().text)).interests).toEqual([]);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
   it("sends Gemini schema and key in a header, validates and sanitizes output", async () => {
     fetchMock.mockResolvedValue(json(gemini(JSON.stringify({ ...emptyAnalysis, interests: ["coding", "programming"] }))));
     expect((await analyzeReflection(reflection().text)).interests).toEqual(["programming"]);
@@ -94,14 +100,14 @@ describe("multi-provider AI (network mocked)", () => {
     [429, { type: "rate_limit_error" }, "AI_RATE_LIMITED"],
     [403, {}, "AI_ACCESS_ERROR"], [404, {}, "AI_ACCESS_ERROR"], [400, {}, "AI_REQUEST_REJECTED"], [500, {}, "AI_UNAVAILABLE"],
   ])("classifies REST provider error %s safely", async (status, error, code) => {
-    fetchMock.mockResolvedValue(json({ error }, status));
+    fetchMock.mockImplementation(async () => json({ error }, status));
     await expect(analyzeReflection(reflection().text)).rejects.toMatchObject({ status: 503, code });
     expect(console.error).toHaveBeenCalledWith("AfterClass gemini request failed", { category: code, status });
     expect(JSON.stringify(vi.mocked(console.error).mock.calls)).not.toMatch(/private-test-key|Private quota/);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(status >= 500 ? 2 : 1);
   });
   it("handles non-JSON service failures without exposing them", async () => {
-    fetchMock.mockResolvedValue(new Response("private service error", { status: 503 }));
+    fetchMock.mockImplementation(async () => new Response("private service error", { status: 503 }));
     await expect(analyzeReflection(reflection().text)).rejects.toMatchObject({ code: "AI_UNAVAILABLE" });
   });
   it("handles malformed successful responses", async () => {

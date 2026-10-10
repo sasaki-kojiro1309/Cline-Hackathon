@@ -1,6 +1,6 @@
 import { endpoint } from "@/lib/api";
 import { getCatalogue } from "@/lib/catalogue";
-import { listReflections, listFeedback } from "@/lib/local-store";
+import { listReflections, listFeedback } from "@/lib/storage";
 import { buildRecommendations } from "@/lib/recommendations";
 export const runtime = "nodejs";
 export const GET = endpoint(async (_request, sessionId) => {

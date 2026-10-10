@@ -26,7 +26,18 @@ export async function analyzeReflection(text: string) {
   const user = `Untrusted student reflection (JSON string):\n${JSON.stringify(text)}`;
   const format = zodTextFormat(analysisSchema, "afterclass_reflection_analysis");
   try {
-    if (config.provider !== "openai") return sanitizeAnalysis(await requestProvider(config, systemPrompt, user, format.schema), text);
+    if (config.provider !== "openai") {
+      let output: unknown;
+      for (let attempt = 0; ; attempt++) {
+        try { output = await requestProvider(config, systemPrompt, user, format.schema); break; }
+        catch (error) {
+          const transient = error instanceof ProviderError && (error.code === "connection" || error.code === "timeout" || (error.status ?? 0) >= 500);
+          if (!transient || attempt >= 1) throw error;
+          await new Promise((resolve) => setTimeout(resolve, 300));
+        }
+      }
+      return sanitizeAnalysis(output, text);
+    }
     const client = new OpenAI({ apiKey, timeout: 25000, maxRetries: 1 });
     const response = await client.responses.parse({
       model, store: false,

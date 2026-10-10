@@ -8,6 +8,7 @@ export async function requestJson<T>(url: string, schema: z.ZodType<T>, body?: u
   }) });
   const json: unknown = await response.json();
   if (!response.ok) {
+    if (response.status === 401 && url !== "/api/account") window.dispatchEvent(new Event("afterclass:unauthorized"));
     const error = errorSchema.safeParse(json);
     throw new Error(error.success ? error.data.error.message : "The request failed. Please retry.");
   }

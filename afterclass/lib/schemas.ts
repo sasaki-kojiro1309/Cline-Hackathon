@@ -12,9 +12,13 @@ export const analysisSchema = z.object({
 }).strict();
 export type Analysis = z.infer<typeof analysisSchema>;
 
+export const profileSchema = z.object({ displayName: z.string().trim().max(60), consentAt: z.string().nullable() });
+export type Profile = z.infer<typeof profileSchema>;
+
 export const reflectionInputSchema = z.object({
   text: z.string().trim().min(20, "Write at least 20 characters.").max(1500, "Keep your reflection under 1,500 characters."),
 }).strict();
+export const consentInputSchema = reflectionInputSchema.extend({ consent: z.literal(true, { error: "Please consent to AI processing before submitting." }) }).strict();
 export const feedbackStatusSchema = z.enum(["saved", "not_interested", "completed"]);
 export type FeedbackStatus = z.infer<typeof feedbackStatusSchema>;
 export const feedbackInputSchema = z.object({
@@ -41,7 +45,8 @@ export const opportunitySchema = z.object({
   estimated_effort_hours: z.number().positive(),
   estimated_effort_label: z.string().min(1), next_action: z.string().min(1),
   url: z.url().refine((url) => /^https?:\/\//.test(url)).nullable(), is_example: z.boolean(),
-}).strict();
+  verified_at: z.iso.date().nullable().optional(), source: z.string().min(1).optional(),
+}).strict().refine((o) => o.is_example || (!!o.url && !!o.verified_at && !!o.source), "Real resources need a URL, source and verification date.");
 export type Opportunity = z.infer<typeof opportunitySchema>;
 
 export const discoveriesSchema = z.object({
@@ -51,13 +56,17 @@ export const discoveriesSchema = z.object({
   shortInsight: z.string().nullable(), insightReflectionId: z.string().nullable(),
   possibleSkills: z.array(z.string()), futureDirections: z.array(z.string()),
   evidence: z.array(z.object({ reflectionId: z.string(), text: z.string(), createdAt: z.string() })),
+  themeChanges: z.array(z.object({ tag: z.string(), recentCount: z.number(), previousCount: z.number(), description: z.string(), sourceReflectionIds: z.array(z.string()) })).default([]),
+  historyCount: z.number().default(0),
 });
 export type Discoveries = z.infer<typeof discoveriesSchema>;
 export const recommendationCardSchema = z.object({
-  id: z.string(), title: z.string(), category: opportunitySchema.shape.category,
+  id: z.string(), title: z.string(), category: z.enum(["competition", "campus_event", "project", "research", "learning_resource", "student_community"]),
   description: z.string(), whyMatch: z.string(), estimatedEffort: z.string(),
   nextAction: z.string(), url: z.string().nullable(), isExample: z.boolean(),
   status: feedbackStatusSchema.nullable(),
+  verifiedAt: z.string().nullable().default(null), source: z.string().nullable().default(null),
+  prerequisiteNote: z.string().nullable().default(null),
 });
 export type RecommendationCard = z.infer<typeof recommendationCardSchema>;
 export const recommendationsSchema = z.object({

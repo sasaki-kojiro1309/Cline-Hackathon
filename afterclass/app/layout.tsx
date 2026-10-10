@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Navigation } from "@/components/navigation";
+import { AccountPanel } from "@/components/account-panel";
+import { AuthGate } from "@/components/auth-gate";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <Navigation />
-        <main id="main" className="shell">{children}</main>
+        <main id="main" className="shell"><AuthGate>{children}<AccountPanel /></AuthGate></main>
         <footer className="shell">Reflect → Discover → Explore. A starting point, not a career verdict.</footer>
       </body>
     </html>

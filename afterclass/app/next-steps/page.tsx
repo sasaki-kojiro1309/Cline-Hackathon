@@ -24,7 +24,7 @@ export default function NextStepsPage() {
   }
   return <>
     <p className="eyebrow">03 / Explore</p><h1>Your Next Steps</h1>
-    <p className="intro">Try something small and see how it feels. These example activities are not verified scheduled events.</p>
+    <p className="intro">Try something small and see how it feels. Explore labelled examples and verified learning resources. Example campus activities are not scheduled events.</p>
     <DataState error={error} loading={loading} retry={reload} />
     {feedbackError && <p className="error" role="alert">{feedbackError} No change was confirmed. Try the action again.</p>}
     <p className="status" role="status">{busy ? "Updating your next steps…" : confirmation}</p>

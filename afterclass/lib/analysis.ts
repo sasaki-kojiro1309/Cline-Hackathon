@@ -3,8 +3,19 @@ import { analysisSchema, type Analysis } from "./schemas";
 export const canonicalTags = ["computer architecture", "digital systems", "electronics", "robotics", "programming", "web development", "data science", "artificial intelligence", "cybersecurity", "mathematics", "problem solving", "research", "physics", "biology", "environment", "design", "product design", "writing", "public speaking", "entrepreneurship", "community service", "creative arts", "hardware", "collaboration"];
 export function normalizeTag(value: string): string {
   const tag = value.trim().toLowerCase().replace(/\s+/g, " ");
-  const synonyms: Record<string, string> = { coding: "programming", circuits: "digital systems", "web design": "web development" };
+  const synonyms: Record<string, string> = { coding: "programming", circuits: "digital systems", "web design": "web development", "logic circuits": "digital systems", "logic gates": "digital systems", "computer organisation": "computer architecture", "computer organization": "computer architecture", "machine learning": "artificial intelligence", "data analysis": "data science", "creative writing": "writing", "volunteering": "community service" };
   return synonyms[tag] ?? tag;
+}
+export function curiosityTags(value: string): string[] {
+  const normalized = normalizeTag(value);
+  if (canonicalTags.includes(normalized)) return [normalized];
+  const rules: Array<[RegExp, string]> = [
+    [/\b(?:processors?|cpu|computer architecture)\b/i, "computer architecture"],
+    [/\b(?:logic gates?|logic circuits?|truth tables?)\b/i, "digital systems"],
+    [/\b(?:websites?|webpages?|web development)\b/i, "web development"],
+    [/\b(?:robots?|robotics)\b/i, "robotics"],
+  ];
+  return rules.filter(([pattern]) => pattern.test(value)).map(([, tag]) => tag);
 }
 function bounded(value: string, limit: number): string {
   const text = value.trim().replace(/\s+/g, " ");

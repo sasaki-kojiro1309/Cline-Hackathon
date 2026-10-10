@@ -1,6 +1,6 @@
 import { ApiError, endpoint, jsonBody } from "@/lib/api";
 import { getOpportunityById } from "@/lib/catalogue";
-import { upsertFeedback } from "@/lib/local-store";
+import { upsertFeedback } from "@/lib/storage";
 import { feedbackInputSchema } from "@/lib/schemas";
 export const runtime = "nodejs";
 export const POST = endpoint(async (request, sessionId) => {

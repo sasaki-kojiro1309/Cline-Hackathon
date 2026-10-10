@@ -8,10 +8,11 @@ import { signSession, verifySession } from "@/lib/session-signing";
 import { emptyAnalysis, feedback, reflection } from "./fixtures";
 
 describe("catalogue", () => {
-  it("contains exactly 24 valid, unique examples without invented URLs", () => {
+  it("contains 24 examples and 4 verified resources with unique IDs", () => {
     const items = getCatalogue();
-    expect(items).toHaveLength(24); expect(new Set(items.map((o) => o.id)).size).toBe(24);
-    items.forEach((o) => { expect(opportunitySchema.safeParse(o).success).toBe(true); expect(o.is_example).toBe(true); expect(o.url).toBeNull(); });
+    expect(items).toHaveLength(28); expect(new Set(items.map((o) => o.id)).size).toBe(28);
+    expect(items.filter((o) => o.is_example)).toHaveLength(24);
+    items.forEach((o) => { expect(opportunitySchema.safeParse(o).success).toBe(true); if (o.is_example) expect(o.url).toBeNull(); else { expect(o.verified_at).toBeTruthy(); expect(o.source).toBeTruthy(); expect(o.url).toMatch(/^https:/); } });
   });
   it("does not find invented IDs", () => expect(getOpportunityById("not-real")).toBeUndefined());
 });
@@ -68,7 +69,7 @@ describe("recommendations", () => {
   const catalogue = getCatalogue();
   it("ranks logic-related examples for logic reflections, returning exactly three", () => {
     const result = buildRecommendations([reflection(["digital systems", "computer architecture"])], [], catalogue);
-    expect(result.recommendations.map((r) => r.id)).toEqual(["opp-17", "opp-09", "opp-01"]);
+    expect(result.recommendations.map((r) => r.id)).toEqual(["opp-17", "resource-03", "opp-09"]);
     result.recommendations.forEach((r) => expect(r.whyMatch).toContain(r.nextAction));
   });
   it("ranks writing above hardware", () => expect(rankOpportunities([reflection(["writing"])], [], catalogue)[0].opportunity.id).toBe("opp-23"));

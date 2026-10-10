@@ -19,9 +19,13 @@ export default function DiscoveriesPage() {
         {!data.interests.length && <p className="muted">Not enough evidence for interest tags yet. Try reflecting on a specific activity you enjoyed or were curious about.</p>}
         {data.observations.map((observation, index) => <div key={index} className="mt-4"><p>{observation.text}</p><Evidence ids={observation.sourceReflectionIds} data={data} /></div>)}
       </section>
+      {!!data.themeChanges.length && <section className="panel"><p className="eyebrow">Across your experiences</p><h2>How your themes are changing</h2>{data.themeChanges.map((theme) => <div key={theme.tag}><p>{theme.description}</p><Evidence ids={theme.sourceReflectionIds} data={data} /></div>)}</section>}
       {data.shortInsight && <section className="panel"><p className="eyebrow">AI-generated · Possible observation</p><h2>A clue from a recent reflection</h2><p className="insight">{data.shortInsight}</p><Evidence ids={data.insightReflectionId ? [data.insightReflectionId] : []} data={data} /></section>}
       {!!data.possibleSkills.length && <section className="panel"><h2>Possible strengths to explore</h2><p className="small">Tentative signals from your activities, not verified skills.</p><ul>{data.possibleSkills.map((skill) => <li key={skill}>{skill}</li>)}</ul></section>}
       {!!data.futureDirections.length && <section className="panel"><h2>Possible directions to explore</h2><ul>{data.futureDirections.map((direction) => <li key={direction}>{direction}</li>)}</ul></section>}
+      <section className="panel"><h2>Your recent reflection history</h2><p className="small">Discoveries use up to your latest 50 reflections. Export all retained history from Account & privacy.</p>
+        {data.evidence.map((entry) => <details key={entry.reflectionId}><summary>{new Date(entry.createdAt).toLocaleDateString()} — {entry.text.slice(0, 70)}{entry.text.length > 70 ? "…" : ""}</summary><blockquote>{entry.text}</blockquote></details>)}
+      </section>
       <Link className="button" href="/next-steps">Explore your next steps →</Link>
     </> : <EmptyState />)}
   </>;

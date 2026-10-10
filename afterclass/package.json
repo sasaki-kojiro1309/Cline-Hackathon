@@ -2,6 +2,7 @@
   "name": "afterclass",
   "version": "0.1.0",
   "private": true,
+  "engines": { "node": ">=24.0.0" },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,9 +11,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:config": "node scripts/check-config.mjs",
+    "check:resources": "node scripts/verify-resources.mjs",
+    "test:live": "node scripts/live-smoke.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "next": "16.4.0",
     "openai": "^7.32.0",
     "react": "19.3.0",
