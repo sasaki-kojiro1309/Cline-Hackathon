@@ -117,21 +117,6 @@ Start the app and create an account, then open **Your Next Steps → Browse idea
 
 However, **new reflections are saved only after successful AI analysis**. Without a working key/model, the app shows an error and retains the draft in the current page; it does not produce fake insights. Automated tests below exercise successful AI flows with mocked provider responses, but those are not a live AI demo.
 
-## Suggested judge walkthrough — about five minutes
-
-1. **Reflect:** on Daily Check-in, enter a fictional reflection such as:
-
-   > I enjoyed geography today, especially comparing river landscapes and drawing a map of our neighbourhood. Memorizing names felt tedious, but I am curious about how maps explain changes in a place. I have about an hour to try a small activity.
-
-   Check the AI consent box and select **Find my insights**. This sends the reflection to the configured provider. Output may vary; there is no fixed canned result.
-
-2. **Inspect the reasoning:** on My Discoveries, open **Why am I seeing this?** beneath an interest or insight. Inspect **Patterns** and **History**, search for `river`, and try a date filter.
-3. **Explore:** open Your Next Steps → **For you**. Read **Why try this?** and the next action on a matching card. The app shows up to three supported matches; it does not fill empty slots with unrelated personalized claims.
-4. **Give feedback:** select **Save**, find the activity in **Saved**, then **Mark completed**. Try **Not interested** on another suggestion and observe the updated suggestions.
-5. **Browse broadly:** select **Browse ideas**, choose `geography`, then try another subject. Clear the filter, search for `nutrition`, or move through pages. This view uses the static catalogue, not web search.
-6. **Check persistence and control:** refresh, or sign out and log back in, to see retained history and feedback. Open **Account & privacy** to export data. Deletion requires typing `DELETE`; try it only when you are finished with the demo data.
-
-**Multi-day feature:** the optional **Combined journey summary** requires reflections on at least **two distinct UTC days**, plus separate consent and an explicit **Analyze my journey** request. Several reflections entered today do not satisfy that requirement. It sends aggregate signals and up to 30 representative excerpts, uses an in-memory cache, and never runs automatically. Desktop/mobile browser tests demonstrate the multi-day flow with synthetic fixtures; a fresh account need not demonstrate it during a five-minute review.
 
 ## Architecture
 
@@ -223,7 +208,7 @@ npm run build
 
 `npm run test:live` is a separate, opt-in smoke test that consumes API credits and creates a test account. It is not needed for judging; use it only on an authorized local/staging instance. See [operations guidance](./afterclass/DEPLOYMENT.md).
 
-## Privacy, limitations, and next steps
+## Next Steps
 
 - **Local-first is not fully offline:** account data lives on the running server, but consented reflection/journey analysis sends text to the selected AI provider. Use fictional, non-sensitive demo reflections.
 - Passwords are salted and hashed; sessions are revocable. Student data is **not encrypted at rest**. Do not treat this as a production-ready identity system.
