@@ -98,7 +98,7 @@ describe("multi-provider AI (network mocked)", () => {
     [402, { message: "Insufficient credits" }, "AI_QUOTA_EXCEEDED"],
     [429, { message: "Private quota and billing details" }, "AI_QUOTA_EXCEEDED"],
     [429, { type: "rate_limit_error" }, "AI_RATE_LIMITED"],
-    [403, {}, "AI_ACCESS_ERROR"], [404, {}, "AI_ACCESS_ERROR"], [400, {}, "AI_REQUEST_REJECTED"], [500, {}, "AI_UNAVAILABLE"],
+    [403, {}, "AI_ACCESS_ERROR"], [404, {}, "AI_MODEL_NOT_FOUND"], [400, {}, "AI_REQUEST_REJECTED"], [500, {}, "AI_UNAVAILABLE"],
   ])("classifies REST provider error %s safely", async (status, error, code) => {
     fetchMock.mockImplementation(async () => json({ error }, status));
     await expect(analyzeReflection(reflection().text)).rejects.toMatchObject({ status: 503, code });
@@ -109,6 +109,23 @@ describe("multi-provider AI (network mocked)", () => {
   it("handles non-JSON service failures without exposing them", async () => {
     fetchMock.mockImplementation(async () => new Response("private service error", { status: 503 }));
     await expect(analyzeReflection(reflection().text)).rejects.toMatchObject({ code: "AI_UNAVAILABLE" });
+  });
+  it.each([
+    [400, { status: "INVALID_ARGUMENT", details: [{ reason: "API_KEY_INVALID" }] }, "AI_AUTH_ERROR", "valid Gemini API key"],
+    [403, { message: "Your API key was reported as leaked. private-test-key" }, "AI_AUTH_ERROR", "Revoke"],
+    [403, { details: [{ reason: "SERVICE_DISABLED", metadata: { project: "private-project" } }] }, "AI_ACCESS_ERROR", "Enable generativelanguage.googleapis.com"],
+    [403, { details: [{ reason: "API_KEY_HTTP_REFERRER_BLOCKED" }] }, "AI_ACCESS_ERROR", "server-compatible restrictions"],
+    [403, { details: [{ reason: "API_KEY_SERVICE_BLOCKED" }] }, "AI_ACCESS_ERROR", "server-compatible restrictions"],
+    [404, { status: "NOT_FOUND" }, "AI_MODEL_NOT_FOUND", "Changing keys alone"],
+    [404, { message: "This model is no longer available to new users. private-project" }, "AI_MODEL_NOT_FOUND", "retired or restricted"],
+    [400, { status: "INVALID_ARGUMENT" }, "AI_REQUEST_REJECTED", "not Gemini"],
+  ])("gives actionable Gemini diagnostics for %s without exposing upstream details", async (status, error, code, hint) => {
+    fetchMock.mockResolvedValue(json({ error }, status));
+    await expect(analyzeReflection(reflection().text)).rejects.toMatchObject({ status: 503, code, message: expect.stringContaining(hint) });
+    try { await analyzeReflection(reflection().text); } catch (failure) {
+      expect(String(failure)).not.toMatch(/private-test-key|private-project/);
+    }
+    expect(JSON.stringify(vi.mocked(console.error).mock.calls)).not.toMatch(/private-test-key|private-project/);
   });
   it("handles malformed successful responses", async () => {
     fetchMock.mockResolvedValue(new Response("not JSON"));

@@ -39,6 +39,41 @@ stop it, delete only `.next/dev`, and restart `npm run dev`. On Windows, use
 `Remove-Item .next/dev -Recurse -Force` after stopping the server. This removes
 generated development files, not the `.afterclass` database or `.env.local`.
 
+### Gemini API errors
+
+Set `AI_PROVIDER=gemini`, `AI_API_KEY` to a Gemini key from Google AI Studio,
+and `AI_MODEL` to a model available to that key's project. Restart `npm run dev`
+after changing `/Users/mac_m5/Documents/GitHub/Cline-Hackathon/afterclass/.env.local`.
+`AI_OUTPUT_MODE` is only used by `openai-compatible`, not Gemini.
+
+Run `npm run check:ai` from this app directory for a **read-only model metadata
+check** using Next's development environment-file precedence. It does not send
+reflections, generate output, consume generation tokens or modify stored data.
+Success verifies metadata access and model generation capability, not generation
+permission, billing/quota or structured-output compatibility.
+
+**Metadata can still succeed for a retired/restricted model.** To check actual
+generation, run `npm run check:ai -- --generate`. This explicitly uses a small
+amount of API quota with synthetic text only; it never writes to the database.
+In this project's live diagnostic, Google rejected `gemini-2.5-flash` for new
+users and recommended `gemini-3.8-flash`. Verify availability with your own key;
+model access can change independently of the app. The suggested model returned
+503 during testing, while `gemini-3.1-flash-lite` successfully generated JSON;
+the local configuration was switched to that working model.
+
+- **403:** check Google project permissions, Generative Language API enablement
+  and key restrictions. Browser HTTP-referrer restrictions do not work for this
+  server-side integration. Allow `generativelanguage.googleapis.com`.
+- **404:** the configured model is unavailable or unsupported on `v1beta`;
+  changing keys alone will not fix an unavailable model name.
+- **Blocked/leaked key:** revoke it and create a replacement in Google AI Studio.
+- **429:** check project quota/billing; repeatedly creating keys in the same
+  project does not reset project quota.
+
+Never paste keys into chat or commit environment files. Provider errors are
+converted to controlled messages; raw Google messages/project details are not
+logged or returned to the browser.
+
 ## Accounts and student history
 
 1. Open the app and click **Create account**.

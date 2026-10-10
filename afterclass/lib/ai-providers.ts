@@ -30,13 +30,13 @@ export const providerLabels: Record<AIProvider, string> = {
   openai: "OpenAI", gemini: "Google Gemini", anthropic: "Anthropic Claude", "openai-compatible": "your configured AI service",
 };
 export class ProviderError extends Error {
-  constructor(public status: number | undefined, public code: string | undefined, public type: string | undefined, message: string) { super(message); }
+  constructor(public status: number | undefined, public code: string | undefined, public type: string | undefined, message: string, public reasons: string[] = []) { super(message); }
 }
 const textBlock = z.object({ type: z.string().optional(), text: z.string().optional(), thought: z.boolean().optional() });
 const geminiResponse = z.object({ candidates: z.array(z.object({ finishReason: z.string(), content: z.object({ parts: z.array(textBlock) }) })).min(1) });
 const claudeResponse = z.object({ stop_reason: z.string(), content: z.array(textBlock) });
 const chatResponse = z.object({ choices: z.array(z.object({ finish_reason: z.string(), message: z.object({ content: z.string(), refusal: z.string().nullable().optional() }) })).min(1) });
-const errorResponse = z.object({ error: z.object({ code: z.union([z.string(), z.number()]).optional(), type: z.string().optional(), status: z.string().optional(), message: z.string().optional() }) });
+const errorResponse = z.object({ error: z.object({ code: z.union([z.string(), z.number()]).optional(), type: z.string().optional(), status: z.string().optional(), message: z.string().optional(), details: z.array(z.object({ reason: z.string().optional() })).optional() }) });
 
 export async function requestProvider(config: ReturnType<typeof getAIConfig>, system: string, user: string, schema: Record<string, unknown>): Promise<unknown> {
   let url: string;
@@ -74,7 +74,7 @@ export async function requestProvider(config: ReturnType<typeof getAIConfig>, sy
   if (!response.ok) {
     const details = errorResponse.safeParse(data);
     const error = details.success ? details.data.error : undefined;
-    throw new ProviderError(response.status, typeof error?.code === "string" ? error.code : undefined, error?.type ?? error?.status, error?.message ?? "Provider request failed");
+    throw new ProviderError(response.status, typeof error?.code === "string" ? error.code : undefined, error?.type ?? error?.status, error?.message ?? "Provider request failed", error?.details?.flatMap((detail) => detail.reason ? [detail.reason] : []) ?? []);
   }
   let text: string;
   if (config.provider === "gemini") {

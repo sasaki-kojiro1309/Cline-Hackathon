@@ -84,6 +84,33 @@ export async function analyzeStructured<T>(system: string, user: string, schema:
         code = "AI_REQUEST_REJECTED";
         message = "OpenAI rejected the analysis request. Check that OPENAI_MODEL supports the Responses API and Structured Outputs. Your draft is unchanged.";
       }
+      if (config.provider === "gemini" && error instanceof ProviderError) {
+        // Inspect upstream details only to select controlled messages. Never expose
+        // Google's raw message/metadata, which can contain keys and project IDs.
+        const hasReason = (...reasons: string[]) => error.reasons.some((reason) => reasons.includes(reason));
+        if ((error.status === 400 || error.status === 403) && /leaked/i.test(error.message)) {
+          code = "AI_AUTH_ERROR";
+          message = "Google has blocked this Gemini API key as leaked. Revoke it and create a new key in Google AI Studio, update AI_API_KEY in .env.local, and restart the server. Your draft is unchanged.";
+        } else if (hasReason("API_KEY_INVALID", "API_KEY_EXPIRED") || (error.status === 400 && /API key not valid/i.test(error.message))) {
+          code = "AI_AUTH_ERROR";
+          message = "Google Gemini rejected the API key. Set AI_API_KEY to a valid Gemini API key from Google AI Studio in .env.local and restart the server. Your draft is unchanged.";
+        } else if (hasReason("SERVICE_DISABLED")) {
+          code = "AI_ACCESS_ERROR";
+          message = "The Generative Language API is disabled in the Google project that owns this key. Enable generativelanguage.googleapis.com for that project and retry. Your draft is unchanged.";
+        } else if (hasReason("API_KEY_SERVICE_BLOCKED", "API_KEY_HTTP_REFERRER_BLOCKED", "API_KEY_IP_ADDRESS_BLOCKED", "API_KEY_ANDROID_APP_BLOCKED", "API_KEY_IOS_APP_BLOCKED")) {
+          code = "AI_ACCESS_ERROR";
+          message = "Google Gemini blocked this key's API or application restrictions. This app calls Gemini from the server: allow the Generative Language API and use server-compatible restrictions, not browser HTTP referrers. Your draft is unchanged.";
+        } else if (error.status === 404) {
+          code = "AI_MODEL_NOT_FOUND";
+          message = /no longer available|deprecated|retired|discontinued/i.test(error.message)
+            ? "Google has retired or restricted the configured Gemini model for generation. A metadata check can still pass for an unavailable model. Update AI_MODEL in .env.local to a currently available Gemini model and restart the server. Run npm run check:ai -- --generate to verify using a small amount of API quota. Changing keys alone will not fix an unavailable model. Your draft is unchanged."
+            : "The configured Gemini model was not found or does not support generateContent on v1beta. Select an available model in AI_MODEL in .env.local and restart the server. Run npm run check:ai -- --generate to verify using a small amount of API quota. Changing keys alone will not fix an unavailable model. Your draft is unchanged.";
+        } else if (error.status === 403) {
+          message = "Google Gemini denied permission for this request. Check the key's Google project, Generative Language API access and key restrictions in Google AI Studio. Run npm run check:ai and restart the server after changing .env.local. Your draft is unchanged.";
+        } else if (error.status === 400 || error.status === 422) {
+          message = "Google Gemini rejected the analysis request. Check that AI_MODEL supports generateContent and JSON structured output. AI_OUTPUT_MODE applies only to openai-compatible services, not Gemini. Your draft is unchanged.";
+        }
+      }
       // Only controlled categories and numeric status: never log provider messages,
       // request bodies, headers, credentials or the student's reflection.
       console.error(`AfterClass ${config.provider === "openai" ? "OpenAI" : config.provider} request failed`, { category: code, status: error.status ?? null });
