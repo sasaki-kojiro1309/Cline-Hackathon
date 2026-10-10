@@ -6,7 +6,7 @@ import { analysisSchema, reflectionInputSchema } from "@/lib/schemas";
 import { ensureSession, errorMessage, requestJson } from "@/lib/client-api";
 
 const responseSchema = z.object({ reflection: z.object({ id: z.string(), text: z.string(), createdAt: z.string() }), analysis: analysisSchema });
-export function ReflectionForm() {
+export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -37,6 +37,6 @@ export function ReflectionForm() {
     <p id="reflection-help" className="small count">{text.length} / 1,500 characters · Minimum 20</p>
     {error && <p id="reflection-error" className="error" role="alert">{error} Your text is still here; submit again to retry.</p>}
     <button type="submit" disabled={busy}>{busy ? "Finding your insights…" : "Find my insights"}</button>
-    <p className="small mt-4">Your reflection is sent to OpenAI for analysis and stored locally in this prototype. Avoid sensitive personal information.</p>
+    <p className="small mt-4">Your reflection is sent to {providerLabel} for analysis and stored locally in this prototype. Avoid sensitive personal information.</p>
   </form>;
 }

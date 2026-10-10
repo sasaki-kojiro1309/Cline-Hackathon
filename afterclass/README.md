@@ -2,8 +2,8 @@
 
 AfterClass connects a short student reflection to tentative interests and small
 next steps. It has exactly three screens: **Daily Check-in**, **My Discoveries**,
-and **Your Next Steps**. OpenAI extracts structured signals; discoveries show
-the actual supporting reflections; a deterministic matcher selects three
+and **Your Next Steps**. A configured AI provider extracts structured signals;
+discoveries show the actual supporting reflections; a deterministic matcher selects three
 opportunities from a static 24-item JSON catalogue.
 
 This is the reduced prototype requested by the operator, not the entire
@@ -15,16 +15,17 @@ events, notifications, scores or career assessments are included.
 ## Requirements and start
 
 - Node.js **24 LTS** and npm (tested with Node 24.21.0 / npm 11.19.0).
-- An OpenAI API key and a model available to your account that supports Responses
-  API Structured Outputs. The example selects `gpt-4o-mini`; account/model
-  availability has **not** been verified. Change it if necessary.
+- An API key for OpenAI, Google Gemini, Anthropic Claude, or an OpenAI-compatible
+  service (including Groq and OpenRouter), plus an available model supporting the
+  selected JSON output mode. Provider support does not imply every model works
+  or that free credits are included.
 - One local Node server with a writable disk. No database or migration is needed.
 
 ```bash
 cd /Users/mac_m5/Documents/GitHub/Cline-Hackathon/afterclass
 npm install
 cp .env.example .env.local
-# Edit .env.local locally: set OPENAI_API_KEY and OPENAI_MODEL.
+# Edit .env.local locally: set AI_PROVIDER, AI_API_KEY and AI_MODEL.
 # Do not paste keys in chat, expose them with NEXT_PUBLIC_, or commit them.
 npm run dev
 ```
@@ -43,13 +44,65 @@ an actionable configuration error. **No fake AI result is substituted.**
 
 | Variable | Purpose |
 | --- | --- |
-| `OPENAI_API_KEY` | Required for real insights; server-only. |
-| `OPENAI_MODEL` | Required configured Structured Outputs-compatible model. |
+| `AI_PROVIDER` | `openai` (default), `gemini`, `anthropic`, or `openai-compatible`. |
+| `AI_API_KEY` | Selected provider's key; server-only. |
+| `AI_MODEL` | Model available to that provider/account; no automatic model selection. |
+| `AI_BASE_URL` | Required only for compatible APIs; trusted HTTPS base URL, including its API version path. No query, fragment or embedded credentials. |
+| `AI_OUTPUT_MODE` | Compatible APIs only: `json_schema` (default) or `json_object`. |
+| `OPENAI_API_KEY`, `OPENAI_MODEL` | Legacy fallback only for `openai`, when the corresponding generic setting is empty. |
 | `SESSION_SIGNING_SECRET` | Optional secret of at least 32 bytes. Otherwise generated and persisted automatically. |
 | `AFTERCLASS_DATA_DIR` | Optional absolute directory; defaults to this app's `.afterclass`. |
 
 `.env.local`, local student data and browser reports are gitignored.
 The signing secret is generated without printing it.
+
+### Selecting an AI provider
+
+Edit `.env.local` locally and restart `npm run dev`. Never paste keys into chat.
+Keys are not detected automatically: choose the provider that issued your key.
+No new SDK dependencies are needed; Gemini, Claude and compatible services use
+server-side REST calls through Node's built-in `fetch`.
+
+| Service | `AI_PROVIDER` | `AI_BASE_URL` | Example `AI_MODEL` |
+| --- | --- | --- | --- |
+| OpenAI | `openai` | unused | `gpt-4o-mini` |
+| Google Gemini (AI Studio API key) | `gemini` | unused | `gemini-2.5-flash` |
+| Anthropic Claude | `anthropic` | unused | `claude-sonnet-4-5` |
+| Groq | `openai-compatible` | `https://api.groq.com/openai/v1` | Choose a current model with the selected JSON mode from Groq's documentation. |
+| OpenRouter | `openai-compatible` | `https://openrouter.ai/api/v1` | Choose a current model/endpoint supporting structured outputs from OpenRouter's model catalogue. |
+
+Example configuration for Gemini (set the key privately):
+
+```dotenv
+AI_PROVIDER=gemini
+AI_API_KEY=
+AI_MODEL=gemini-2.5-flash
+```
+
+Examples are not guarantees of current model availability or live integration.
+OpenAI uses Responses API structured output, Gemini uses `generateContent` with
+a JSON schema, and Claude uses Messages API `output_config.format`. These modes
+require compatible models. Compatible services use `/chat/completions`; try
+`AI_OUTPUT_MODE=json_object` only if your selected model supports JSON mode but
+not native JSON schemas. The JSON-mode prompt includes the schema and **every
+response is still validated with Zod**. Invalid, refused or truncated analyses
+are rejected, not fabricated or saved. There is no automatic output-mode retry.
+
+Only the selected provider receives reflections. There is no cross-provider
+fallback; OpenRouter requests also disable its endpoint fallback. OpenRouter may
+still route the initial request through a model provider according to its service
+configuration. The form identifies the selected service, not any downstream
+OpenRouter provider. A custom base URL must be a service you trust with both the
+key and reflection text; redirects are rejected to avoid forwarding secrets.
+Plain HTTP endpoints and cloud-specific authentication such as Vertex AI,
+Bedrock and Azure deployments are not supported by these adapters.
+
+Safe error messages distinguish missing configuration, authentication, quota,
+rate limits, model access, request rejection, connection failure and timeout.
+Server diagnostics contain only controlled provider/category values and HTTP
+status, never keys, reflections or raw provider error messages. Billing/credits
+and spending limits must be resolved with the provider; a ChatGPT subscription
+does not include OpenAI API credits.
 
 ## Local persistence and security limitations
 
@@ -64,8 +117,9 @@ The HTTP-only signed cookie lasts 30 days, so the same browser retains its data
 through refreshes and server restarts. Separate browsers get different sessions.
 An anonymous signed cookie is a demo identity mechanism, **not production account
 authentication**. Anyone with disk access can read the unencrypted store.
-The reflection text is sent to OpenAI with `store: false`; this is not a promise
-of zero provider retention. Avoid sensitive personal information.
+The reflection text is sent to the selected AI service. OpenAI Responses requests
+use `store: false`; other providers have their own retention policies. This is
+not a promise of zero provider retention. Avoid sensitive personal information.
 
 Run **one server process** against each data directory. This file store is not
 designed for clustered/multi-process use, high traffic or serverless hosts such
@@ -139,13 +193,22 @@ POST requests require same-origin `Origin` and JSON. Personalized responses use
 `Cache-Control: no-store`; ordinary responses do not reveal session IDs. Server
 integrations import `server-only`; user/model text is rendered as text, not HTML.
 
-Main files: `lib/ai.ts`, `lib/analysis.ts`, `lib/local-store.ts`,
+Main files: `lib/ai.ts`, `lib/ai-providers.ts`, `lib/analysis.ts`, `lib/local-store.ts`,
 `lib/session-signing.ts`, `lib/discoveries.ts`, `lib/recommendations.ts`,
 `lib/schemas.ts`, `lib/catalogue.ts`, `app/api/*/route.ts`, and the three
 `app/**/page.tsx` screens. Components contain the form, navigation, opportunity
 card and shared loading/error/empty handling.
 
 ## Validation
+
+Multi-provider update validation on this Windows workspace:
+
+- Unit/API tests: **86 passed** (network mocked).
+- Type checking and linting: **passed**.
+- Browser tests: **10 desktop/mobile cases passed** after installing Chromium.
+- Production build: **passed**.
+- Live analysis: OpenAI remains blocked by account quota; other providers have
+  not been live-tested because their credentials were not supplied.
 
 ```bash
 npm run typecheck
@@ -162,9 +225,11 @@ cross-session isolation, corrupt data and SDK errors. AI network calls are mocke
 in these tests. Browser tests run on desktop and mobile against a separate
 server on port 3100; successful AI journeys use **intercepted API fixtures**.
 The missing-key browser case exercises the real local API with an empty key.
-These tests **do not prove live OpenAI integration**.
+These tests **do not prove live provider integration**. Multi-provider unit tests
+mock REST/SDK calls and cover request formats, configuration, output validation,
+refusals/truncation, safe errors and no cross-provider credential reuse.
 
-Final validation results (all commands exited **0**):
+Original prototype validation results (historical; all commands exited **0**):
 
 | Check | Result |
 | --- | --- |
@@ -179,8 +244,10 @@ Final validation results (all commands exited **0**):
 
 Desktop/mobile browser screenshots were also inspected. Successful reflection
 journeys in automated tests use mocked AI/network responses, not live AI.
-Live OpenAI smoke test: **NOT RUN**, explicitly deferred by the operator. No
-deployment was attempted.
+The original live OpenAI smoke test was deferred. A subsequent local live check
+reached OpenAI but returned HTTP 429 with a quota/billing error. Successful live
+analysis remains unverified. Live Gemini/Claude/compatible-service checks have
+not been run because credentials were not supplied. No deployment was attempted.
 
 `npm audit` currently reports a high-severity `braces` denial-of-service advisory
 through the development-only Next ESLint plugin (five dependent audit entries).
