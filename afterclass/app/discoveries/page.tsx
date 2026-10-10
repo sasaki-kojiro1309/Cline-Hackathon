@@ -5,6 +5,7 @@ import { useApiData, DataState, EmptyState } from "@/components/data-state";
 import { JourneySummaryPanel, ReflectionHistory, JourneyEvidence } from "@/components/journey-panels";
 import { rangeInputSchema, type RangeInput, type Signal } from "@/lib/journey";
 import { discoveriesSchema, type Discoveries } from "@/lib/schemas";
+import { PageHero } from "@/components/page-hero";
 
 function Evidence({ ids, data }: { ids: string[]; data: Discoveries }) {
   return <details><summary>Why am I seeing this?</summary>{data.evidence.filter((e) => ids.includes(e.reflectionId)).map((e) =>
@@ -28,7 +29,7 @@ export default function DiscoveriesPage() {
     setRangeError(""); setSelection(result.data);
   }
   return <>
-    <div className="page-heading"><div><p className="eyebrow">02 / Discover</p><h1>My Discoveries</h1><p className="intro">What your experiences suggest—and what you might explore next.</p></div><Link className="button" href="/">New check-in</Link></div>
+    <PageHero step="02 / Discover · Follow the little clues" title="My Discoveries" description="What your experiences suggest—and what you might explore next."><Link className="button" href="/">New check-in <span aria-hidden="true">→</span></Link><Link className="button secondary" href="/next-steps">Explore next steps</Link></PageHero>
     <form className="discovery-toolbar" onSubmit={applyRange}><div><label htmlFor="journey-range">Date range</label><select id="journey-range" value={range} onChange={(e) => setRange(e.target.value as RangeInput["range"])}><option value="all">All time</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="custom">Custom range</option></select></div>
       {range === "custom" && <><div><label htmlFor="range-start">Start date</label><input id="range-start" type="date" value={start} onChange={(e) => setStart(e.target.value)} /></div><div><label htmlFor="range-end">End date</label><input id="range-end" type="date" value={end} onChange={(e) => setEnd(e.target.value)} /></div></>}
       <button className="secondary">Apply date range</button>{rangeError && <p className="error" role="alert">{rangeError}</p>}

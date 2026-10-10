@@ -31,10 +31,10 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   }
   if (authenticated) return children;
   if (checkingError) return <section className="panel"><p className="error" role="alert">{checkingError}</p><button onClick={() => window.location.reload()}>Retry</button></section>;
-  if (authenticated === null) return <p role="status">Checking your account…</p>;
-  return <section className="panel login-panel"><p className="eyebrow">Your long-term learning companion</p>
+   if (authenticated === null) return <p className="panel" role="status">Checking your account…</p>;
+   return <section className="panel login-panel"><div className="login-heading"><span className="round-icon" aria-hidden="true">✳</span><p className="eyebrow">Your long-term learning companion</p>
     <h1>{registering ? "Create your account" : "Welcome back"}</h1>
-    <p className="intro">Log in to keep your discoveries and next steps together over time. Each student has a private account. There is no guest mode.</p>
+    <p className="intro">Log in to keep your discoveries and next steps together over time. Each student has a private account. There is no guest mode.</p></div>
     <div className="actions mb-6"><button type="button" className={registering ? "secondary" : ""} aria-pressed={!registering} onClick={() => { setRegistering(false); setError(""); setPassword(""); }}>Log in</button>
       <button type="button" className={registering ? "" : "secondary"} aria-pressed={registering} onClick={() => { setRegistering(true); setError(""); setPassword(""); setConfirmation(""); }}>Create account</button></div>
     <form onSubmit={submit}>
@@ -44,7 +44,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       <label htmlFor="login-password">Password</label><input id="login-password" type="password" autoComplete={registering ? "new-password" : "current-password"} minLength={registering ? 12 : 1} maxLength={128} required value={password} onChange={(event) => setPassword(event.target.value)} disabled={busy} />
       {registering && <><label htmlFor="confirm-password">Confirm password</label><input id="confirm-password" type="password" autoComplete="new-password" required value={confirmation} onChange={(event) => setConfirmation(event.target.value)} disabled={busy} /><p className="small">Use at least 12 characters. Remember your Login ID and password: password recovery is not available in this local prototype.</p></>}
       {error && <p className="error" role="alert">{error}</p>}
-      <button type="submit" disabled={busy}>{busy ? "Please wait…" : registering ? "Create my account" : "Log in to AfterClass"}</button>
+      <button type="submit" disabled={busy}>{busy ? "Please wait…" : registering ? "Create my account" : "Log in to AfterClass"}<span aria-hidden="true">→</span></button>
     </form><p className="small mt-5">Accounts and history are stored in this server&apos;s local SQLite database. Keep a backup; this is not a cloud sync service.</p>
   </section>;
 }

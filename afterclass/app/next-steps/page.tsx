@@ -7,6 +7,7 @@ import { feedbackStatusSchema, recommendationsSchema, type FeedbackStatus } from
 import { errorMessage, requestJson } from "@/lib/client-api";
 import { ExampleCatalogue } from "@/components/example-catalogue";
 import { notifyDataChanged } from "@/lib/data-events";
+import { PageHero } from "@/components/page-hero";
 
 const feedbackResponseSchema = z.object({ opportunityId: z.string(), status: feedbackStatusSchema });
 export default function NextStepsPage() {
@@ -27,8 +28,7 @@ export default function NextStepsPage() {
     finally { setBusy(false); }
   }
   return <>
-    <p className="eyebrow">03 / Explore</p><h1>Your Next Steps</h1>
-    <p className="intro">Turn your interests into small, practical next steps—or explore a new subject. Your suggestions grow with every check-in.</p>
+    <PageHero step="03 / Explore · Make room for something new" title="Your Next Steps" description="Turn your interests into small, practical next steps—or explore a new subject. Your suggestions grow with every check-in." />
     <div className="discovery-tabs" role="group" aria-label="Next Steps views"><button aria-pressed={view === "suggested"} onClick={() => setView("suggested")}>For you</button><button aria-pressed={view === "browse"} onClick={() => setView("browse")}>Browse ideas</button></div>
     <p className="small">Suggested activities to adapt at your own pace, not confirmed event or course listings. Times are approximate.</p>
     <DataState error={error} loading={loading} retry={reload} />

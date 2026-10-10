@@ -30,6 +30,7 @@ export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
     finally { setBusy(false); }
   }
   return <form className="panel reflection-panel" onSubmit={submit}>
+    <p className="eyebrow">A moment for you</p><h2>Start with what stayed with you.</h2>
     <div className="hints"><p className="small">Need a starting point? These prompts are optional.</p><ul>
       <li>What did you enjoy today?</li>
       <li>What felt boring, difficult, or frustrating?</li>
@@ -42,7 +43,7 @@ export function ReflectionForm({ providerLabel }: { providerLabel: string }) {
     <p id="reflection-help" className="small count">{text.length} / 1,500 characters · Minimum 20</p>
     {error && <p id="reflection-error" className="error" role="alert">{error} Your text is still here; submit again to retry.</p>}
     <label className="consent"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} disabled={busy} /> I consent to sending this reflection to {providerLabel} for AI analysis and storing it in AfterClass.</label>
-    <button type="submit" disabled={busy}>{busy ? "Finding your insights…" : "Find my insights"}</button>
+    <button type="submit" disabled={busy}>{busy ? "Finding your insights…" : "Find my insights"}<span aria-hidden="true">→</span></button>
     <p className="small mt-4">AI observations can be mistaken. Avoid sensitive personal information. Review storage, retention, export and deletion options in Account & privacy below.</p>
   </form>;
 }

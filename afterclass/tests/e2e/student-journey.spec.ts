@@ -5,6 +5,7 @@ import { getCatalogue } from "../../lib/catalogue";
 import { feedbackInputSchema, type FeedbackRecord, type ReflectionRecord } from "../../lib/schemas";
 import { feedback, reflection } from "../fixtures";
 import { historyPage, readRange } from "../../lib/journey";
+import { browseCatalogue } from "../../lib/catalogue-browser";
 
 async function mockApi(page: Page, fail = false) {
   const records: ReflectionRecord[] = [], rows: FeedbackRecord[] = [];
@@ -23,6 +24,7 @@ async function mockApi(page: Page, fail = false) {
     if (path === "/api/discoveries") return json(buildDiscoveries(records, readRange(url.searchParams)));
     if (path === "/api/journey") return json({ status: "none", summary: null, generatedAt: null, providerLabel: "OpenAI", reflectionCount: records.length, evidenceCount: 0, cached: false });
     if (path === "/api/recommendations") return json(buildRecommendations(records, rows, getCatalogue(), true));
+    if (path === "/api/catalogue") return json(browseCatalogue(url.searchParams, rows));
     if (path === "/api/feedback") {
       const input = feedbackInputSchema.parse(route.request().postDataJSON());
       const index = rows.findIndex((r) => r.opportunityId === input.opportunityId);
@@ -103,4 +105,62 @@ test("real SQLite: consent, missing key, profile and export/delete work after re
   await page.getByLabel("Type DELETE to permanently remove my AfterClass data").fill("DELETE");
   await page.getByRole("button", { name: "Delete my data", exact: true }).click();
   await expect(page.getByLabel("Your reflection")).toBeVisible();
+});
+
+test("paper-cut design: responsive surfaces, keyboard focus and all discovery views", async ({ page }, testInfo) => {
+  await mockApi(page); await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Daily Check-in", exact: true })).toBeVisible();
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(240, 246, 255)");
+  await expect(page.locator(".paper-shapes")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator(".paper-shape")).toHaveCount(8);
+  await expect(page.locator(".page-hero")).toHaveCSS("border-radius", "24px");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCSS("font-weight", "400");
+  const submit = page.getByRole("button", { name: "Find my insights", exact: true });
+  await expect(submit).toHaveCSS("background-color", "rgb(39, 39, 230)");
+  await expect(submit).toHaveCSS("border-radius", "48px");
+  await expect(submit).toHaveCSS("box-shadow", "rgb(17, 17, 24) 0px 4px 0px 0px");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await page.getByLabel("Your reflection").fill(reflection().text);
+  await page.getByRole("checkbox", { name: /I consent/ }).check();
+  await submit.click();
+  await expect(page).toHaveURL(/\/discoveries$/);
+  await page.getByRole("tab", { name: "Overview" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "Patterns" })).toHaveAttribute("aria-selected", "true");
+  await page.getByRole("tab", { name: "History" }).click();
+  await expect(page.getByRole("heading", { name: "Your reflection history" })).toBeVisible();
+  await page.getByLabel("Date range", { exact: true }).selectOption("custom");
+  await expect(page.getByLabel("Start date")).toBeVisible();
+  await expect(page.getByLabel("End date")).toBeVisible();
+  await page.getByRole("navigation").getByRole("link", { name: "Your Next Steps" }).click();
+  await page.getByRole("button", { name: "Browse ideas", exact: true }).click();
+  await page.getByLabel("Search activities").fill("logic");
+  await page.getByRole("button", { name: "Find ideas", exact: true }).click();
+  await expect(page.getByRole("article").first()).toBeVisible();
+  const gridColumns = await page.locator(".grid").first().evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").length);
+  expect(gridColumns).toBe(testInfo.project.name === "mobile" ? 1 : 3);
+  await expect(page.locator(".activity-art").first()).toHaveAttribute("aria-hidden", "true");
+  await page.evaluate(() => { (document.activeElement as HTMLElement | null)?.blur(); window.scrollTo(0, 0); });
+  await page.screenshot({ path: testInfo.outputPath("paper-cut-catalogue.png"), fullPage: true });
+  for (const width of [320, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  }
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.getByRole("button", { name: "Find ideas", exact: true })).toHaveCSS("transition-duration", "0s");
+});
+
+test("paper-cut login: readable inputs and no horizontal overflow at narrow widths", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
+  await expect(page.getByLabel("Login ID", { exact: true })).toHaveCSS("border-radius", "5000px");
+  await page.screenshot({ path: testInfo.outputPath("paper-cut-login.png"), fullPage: true });
+  await page.getByRole("button", { name: "Create account", exact: true }).click();
+  for (const width of [320, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await expect(page.getByLabel("Confirm password", { exact: true })).toBeVisible();
+  }
 });

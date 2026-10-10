@@ -8,6 +8,7 @@ const categoryLabels: Record<RecommendationCard["category"], string> = {
 
 export function OpportunityCard({ card, busy, onFeedback }: { card: RecommendationCard; busy: boolean; onFeedback: (id: string, status: FeedbackStatus) => void }) {
   return <article className="panel opportunity" aria-label={card.title}>
+    <div className={`activity-art art-${card.category}`} aria-hidden="true"><span className="art-cutout art-circle" /><span className="art-cutout art-triangle" /><span className="art-cutout art-star" /></div>
     <p className="category">{categoryLabels[card.category]}</p>
     <span className="example">Exploration idea</span>
     <h2>{card.title}</h2><p className="muted">{card.description}</p>
